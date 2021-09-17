@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/mail-account/mail-account.iml" filepath="$PROJECT_DIR$/mail-account/mail-account.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mail-common/mail-common.iml" filepath="$PROJECT_DIR$/mail-common/mail-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mail-miqu.iml" filepath="$PROJECT_DIR$/mail-miqu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mail-service/mail-service.iml" filepath="$PROJECT_DIR$/mail-service/mail-service.iml" />
+    </modules>
+  </component>
+</project>
