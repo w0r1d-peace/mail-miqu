@@ -1,4 +1,3 @@
-/*
 package com.islet;
 
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -16,23 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-*/
 /**
  * 代码生成器。执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
  *
  * @author tangJM.
  * @date 2018/12/3
- *//*
-
+ */
 public class CodeGenerator {
 
-    */
-/**
+    /**
      * <p>
      * 读取控制台内容
      * </p>
-     *//*
-
+     */
     public static String scanner(String tip) {
         Scanner scanner = new Scanner(System.in);
         StringBuilder help = new StringBuilder();
@@ -116,4 +111,3 @@ public class CodeGenerator {
         mpg.execute();
     }
 }
-*/

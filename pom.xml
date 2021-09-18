@@ -6,7 +6,6 @@
     <modules>
         <module>mail-common</module>
         <module>mail-service</module>
-        <module>mail-account</module>
         <module>mybatis_generator</module>
     </modules>
 
@@ -28,7 +27,7 @@
         <mybatis-plus.version>3.3.0</mybatis-plus.version>
     </properties>
 
-    <dependencyManagement>
+  <!--  <dependencyManagement>
 
         <dependencies>
             <dependency>
@@ -48,25 +47,25 @@
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
-            <!--LOMBOK对象代码简化插件-->
+            &lt;!&ndash;LOMBOK对象代码简化插件&ndash;&gt;
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <optional>true</optional>
             </dependency>
-
-            <!--模版引擎-->
+&lt;!&ndash;
+            &lt;!&ndash;模版引擎&ndash;&gt;
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-freemarker</artifactId>
             </dependency>
 
-            <!--数据库连接-->
+            &lt;!&ndash;数据库连接&ndash;&gt;
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-            </dependency>
+            </dependency>&ndash;&gt;
         </dependencies>
-    </dependencyManagement>
+    </dependencyManagement>-->
 
 </project>
