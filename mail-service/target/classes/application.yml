@@ -12,6 +12,18 @@ spring:
     username: root
     password: root
 
+  freemarker:
+    template-loader-path: classpath:/templates
+    # 关闭缓存，及时刷新，上线生产环境需要修改为true
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    suffix: .ftl
+
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
@@ -19,11 +31,9 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   global-config:
-    # �߼�ɾ������
+    # 逻辑删除配置
     db-config:
-      # ɾ��ǰ
+      # 删除前
       logic-not-delete-value: 1
-      # ɾ����
+      # 删除后
       logic-delete-value: 0
-
-
