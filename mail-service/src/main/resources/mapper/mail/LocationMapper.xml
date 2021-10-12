@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.islet.mapper.mail.LocationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.islet.model.mail.Location">
+        <id column="id" property="id" />
+        <result column="uuid" property="uuid" />
+        <result column="account_id" property="accountId" />
+        <result column="source" property="source" />
+        <result column="target" property="target" />
+        <result column="status" property="status" />
+        <result column="vpn_id" property="vpnId" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="removed" property="removed" />
+        <result column="user_id" property="userId" />
+        <result column="creator" property="creator" />
+        <result column="ipJson" property="ipJson" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uuid, account_id, source, target, status, vpn_id, create_time, modified, removed, user_id, creator, ipJson
+    </sql>
+
+</mapper>

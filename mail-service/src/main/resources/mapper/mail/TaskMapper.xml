@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.islet.mapper.mail.TaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.islet.model.mail.Task">
+        <id column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="removed" property="removed" />
+        <result column="user_id" property="userId" />
+        <result column="creator" property="creator" />
+        <result column="email" property="email" />
+        <result column="password" property="password" />
+        <result column="conn_status" property="connStatus" />
+        <result column="conn_exception_reason" property="connExceptionReason" />
+        <result column="port" property="port" />
+        <result column="host" property="host" />
+        <result column="has_ssl" property="hasSsl" />
+        <result column="protocol_type" property="protocolType" />
+        <result column="vpn_id" property="vpnId" />
+        <result column="has_monitoring" property="hasMonitoring" />
+        <result column="has_emphasis" property="hasEmphasis" />
+        <result column="description" property="description" />
+        <result column="read_number" property="readNumber" />
+        <result column="un_read_number" property="unReadNumber" />
+        <result column="sensitive_number" property="sensitiveNumber" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, create_time, modified, removed, user_id, creator, email, password, conn_status, conn_exception_reason, port, host, has_ssl, protocol_type, vpn_id, has_monitoring, has_emphasis, description, read_number, un_read_number, sensitive_number
+    </sql>
+
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.islet.mapper.mail.InformationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.islet.model.mail.Information">
+        <id column="id" property="id" />
+        <result column="task_id" property="taskId" />
+        <result column="email_id" property="emailId" />
+        <result column="fromer" property="fromer" />
+        <result column="email" property="email" />
+        <result column="has_read" property="hasRead" />
+        <result column="has_top" property="hasTop" />
+        <result column="has_emphasis" property="hasEmphasis" />
+        <result column="title" property="title" />
+        <result column="send_date" property="sendDate" />
+        <result column="has_match_title" property="hasMatchTitle" />
+        <result column="has_match_content" property="hasMatchContent" />
+        <result column="has_match_attachment" property="hasMatchAttachment" />
+        <result column="match_category" property="matchCategory" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="removed" property="removed" />
+        <result column="user_id" property="userId" />
+        <result column="creator" property="creator" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, task_id, email_id, fromer, email, has_read, has_top, has_emphasis, title, send_date, has_match_title, has_match_content, has_match_attachment, match_category, create_time, modified, removed, user_id, creator
+    </sql>
+
+</mapper>

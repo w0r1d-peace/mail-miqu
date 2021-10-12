@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.islet.mapper.mail.BombMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.islet.model.mail.Bomb">
+        <id column="id" property="id" />
+        <result column="target" property="target" />
+        <result column="email_number" property="emailNumber" />
+        <result column="account" property="account" />
+        <result column="account_number" property="accountNumber" />
+        <result column="status" property="status" />
+        <result column="exception_reason" property="exceptionReason" />
+        <result column="send_number" property="sendNumber" />
+        <result column="description" property="description" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="removed" property="removed" />
+        <result column="user_id" property="userId" />
+        <result column="creator" property="creator" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, target, email_number, account, account_number, status, exception_reason, send_number, description, create_time, modified, removed, user_id, creator
+    </sql>
+
+</mapper>

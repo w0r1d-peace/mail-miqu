@@ -71,7 +71,7 @@ public class CodeGenerator {
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(scanner("模块名"));
         pc.setParent("com.islet");
-        pc.setEntity("model.mysql");
+        pc.setEntity("model");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
