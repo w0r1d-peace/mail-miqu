@@ -1,8 +1,10 @@
 package com.islet.domain.dto.mail;
 
+import com.islet.domain.dto.BaseDTO;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -12,7 +14,7 @@ import javax.validation.constraints.NotNull;
  * @description
  */
 @Data
-public class TaskSaveDTO {
+public class TaskSaveDTO extends BaseDTO {
     /**
      * 邮箱
      */
@@ -27,18 +29,21 @@ public class TaskSaveDTO {
     private String password;
 
     /**
-     * 协议类型
+     * 类型
      */
-    private Integer protocolType;
+    @NotNull(message = "类型不能为空")
+    private Integer type;
 
     /**
-     * 服务器地址
+     * 收件服务器
      */
+    @NotBlank(message = "收件服务器不能为空")
     private String host;
 
     /**
      * 服务器端口
      */
+    @NotNull(message = "端口不能为空")
     private Integer port;
 
     /**
@@ -49,14 +54,12 @@ public class TaskSaveDTO {
     /**
      * 是否监控
      */
-    @NotNull(message = "是否监控不能为空")
-    private Boolean hasMonitoring;
+    private Boolean monitoring;
 
     /**
      * 是否为重点关注目标
      */
-    @NotNull(message = "重点关注目标不能为空")
-    private Boolean hasEmphasis;
+    private Boolean emphasis;
 
     /**
      * 备注

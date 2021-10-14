@@ -1,6 +1,6 @@
 package com.islet.controller.base;
 
-import com.islet.common.Result;
+import com.islet.common.web.Result;
 import com.islet.domain.dto.base.UserLoginDTO;
 import com.islet.service.base.IUserService;
 import org.springframework.stereotype.Controller;

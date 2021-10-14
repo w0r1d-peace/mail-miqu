@@ -1,4 +1,6 @@
-package com.islet.common;
+package com.islet.exception;
+
+import com.islet.common.web.ResultCode;
 
 /**
  * @author tangJM.

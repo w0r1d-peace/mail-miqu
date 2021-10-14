@@ -1,16 +1,19 @@
 package com.islet.service.mail;
-
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.islet.model.mail.Task;
+import com.islet.domain.dto.mail.TaskSaveDTO;
 
 /**
  * <p>
- * 邮件任务池，每个用户最多只有20条数据 服务类
+ * 任务 服务类
  * </p>
  *
  * @author tangJM.
  * @since 2021-10-12
  */
-public interface ITaskService extends IService<Task> {
+public interface ITaskService {
 
+    /**
+     * 新增邮箱
+     * @param dto
+     */
+    Long saveTask(TaskSaveDTO dto);
 }

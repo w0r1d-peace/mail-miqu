@@ -29,8 +29,8 @@ public class Trojan implements Serializable {
     /**
      * 木马邮件ID
      */
-    @TableId(value = "id", type = IdType.UUID)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 发件账号ID

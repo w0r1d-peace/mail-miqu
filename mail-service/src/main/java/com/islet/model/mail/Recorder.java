@@ -26,8 +26,8 @@ public class Recorder implements Serializable {
     /**
      * 主键id
      */
-    @TableId(value = "id", type = IdType.UUID)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 目标邮箱

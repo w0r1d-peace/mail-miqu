@@ -1,15 +1,16 @@
 package com.islet.controller.mail;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.islet.common.Result;
+import com.islet.common.web.Result;
 import com.islet.domain.dto.mail.TaskSaveDTO;
+import com.islet.service.mail.ITaskService;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -22,21 +23,28 @@ import javax.validation.Valid;
 @Validated
 public class TaskController {
 
+    @Resource
+    private ITaskService taskService;
 
-
+    /**
+     * 保存
+     * @param form
+     * @return
+     */
     @PostMapping("/save_task")
     @ResponseBody
-    public Result saveTask(@Valid TaskSaveDTO form) {
-        // 判断是否存在邮箱已录入
-       /* int count = taskService.count(new LambdaQueryWrapper<Task>()
-                .eq(Task::getEmail, form.getEmail())
-                .eq(Task::getUserId, form.getUserId())
-        );
-        if (count > 0) {
-            return new ApiResult().error(ResultEnum.EMAIL_EXIST_ALREADY);
-        }
-        taskService.saveTask(form);
-        return new ApiResult().success();*/
-        return null;
+    public Result<Long> saveTask(@RequestBody @Valid TaskSaveDTO form) {
+        return Result.success(taskService.saveTask(form));
+    }
+
+    /**
+     * 编辑
+     * @param form
+     * @return
+     */
+    @PostMapping("/edit_task")
+    @ResponseBody
+    public Result<Long> editTask(@RequestBody @Valid TaskSaveDTO form) {
+        return Result.success(taskService.saveTask(form));
     }
 }

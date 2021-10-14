@@ -26,8 +26,8 @@ public class TrojanDetail implements Serializable {
     /**
      * 木马详情ID
      */
-    @TableId(value = "id", type = IdType.UUID)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 内容

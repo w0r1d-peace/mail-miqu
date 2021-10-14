@@ -1,4 +1,4 @@
-package com.islet.common;
+package com.islet.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

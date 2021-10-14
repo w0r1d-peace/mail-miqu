@@ -29,8 +29,8 @@ public class Category implements Serializable {
     /**
      * 分类ID
      */
-    @TableId(value = "id", type = IdType.UUID)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 分类

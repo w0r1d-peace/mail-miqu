@@ -1,11 +1,7 @@
 package com.islet.model.mail;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.Version;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -22,6 +18,10 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@TableName("mail_task")
 public class Task implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -29,8 +29,8 @@ public class Task implements Serializable {
     /**
      * 任务ID
      */
-    @TableId(value = "id", type = IdType.UUID)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 创建时间
@@ -72,7 +72,7 @@ public class Task implements Serializable {
     /**
      * 连接状态 0-无状态 1-连接中 2-连接异常
      */
-    private Boolean connStatus;
+    private Integer connStatus;
 
     /**
      * 连接异常原因
@@ -85,7 +85,7 @@ public class Task implements Serializable {
     private Integer port;
 
     /**
-     * 服务器地址
+     * 收件服务器
      */
     private String host;
 
@@ -95,9 +95,9 @@ public class Task implements Serializable {
     private Boolean hasSsl;
 
     /**
-     * 协议类型 0-爬虫 1-imap 2-pop3 4-exchange
+     * 邮箱类型 1-imap 2-pop3 4-exchange
      */
-    private Boolean protocolType;
+    private Integer type;
 
     /**
      * 节点ID
@@ -107,12 +107,12 @@ public class Task implements Serializable {
     /**
      * 是否监控 0-否 1-是
      */
-    private Boolean hasMonitoring;
+    private Boolean monitoring;
 
     /**
      * 重点关注目标 0-否 1-是
      */
-    private Boolean hasEmphasis;
+    private Boolean emphasis;
 
     /**
      * 描述

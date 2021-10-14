@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.islet.mapper.mail.TrojanMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.islet.model.mail.Trojan">
+        <id column="id" property="id" />
+        <result column="account_id" property="accountId" />
+        <result column="source" property="source" />
+        <result column="target" property="target" />
+        <result column="mail_sploit" property="mailSploit" />
+        <result column="mail_sploit_name" property="mailSploitName" />
+        <result column="mail_sploit_email" property="mailSploitEmail" />
+        <result column="title" property="title" />
+        <result column="vpn_id" property="vpnId" />
+        <result column="status" property="status" />
+        <result column="trojan_detail_id" property="trojanDetailId" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="removed" property="removed" />
+        <result column="user_id" property="userId" />
+        <result column="creator" property="creator" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, account_id, source, target, mail_sploit, mail_sploit_name, mail_sploit_email, title, vpn_id, status, trojan_detail_id, create_time, modified, removed, user_id, creator
+    </sql>
+
+</mapper>

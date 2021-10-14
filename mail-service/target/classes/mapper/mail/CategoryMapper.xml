@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.islet.mapper.mail.CategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.islet.model.mail.Category">
+        <id column="id" property="id" />
+        <result column="category" property="category" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="removed" property="removed" />
+        <result column="user_id" property="userId" />
+        <result column="creator" property="creator" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, category, create_time, modified, removed, user_id, creator
+    </sql>
+
+</mapper>

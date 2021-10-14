@@ -1,4 +1,4 @@
-package com.islet.common;
+package com.islet.common.web;
 
 /**
  * @author tangJM.

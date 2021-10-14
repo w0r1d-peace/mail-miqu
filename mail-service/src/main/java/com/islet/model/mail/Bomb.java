@@ -29,8 +29,8 @@ public class Bomb implements Serializable {
     /**
      * 邮件轰炸ID
      */
-    @TableId(value = "id", type = IdType.UUID)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 目标邮箱

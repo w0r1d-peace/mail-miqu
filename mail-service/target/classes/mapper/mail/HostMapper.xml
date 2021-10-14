@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.islet.mapper.mail.HostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.islet.model.mail.Host">
+        <id column="id" property="id" />
+        <result column="domain" property="domain" />
+        <result column="pop_host" property="popHost" />
+        <result column="imap_host" property="imapHost" />
+        <result column="exchange_host" property="exchangeHost" />
+        <result column="create_time" property="createTime" />
+        <result column="modified" property="modified" />
+        <result column="removed" property="removed" />
+        <result column="smtp_host" property="smtpHost" />
+        <result column="imap_port" property="imapPort" />
+        <result column="pop_port" property="popPort" />
+        <result column="smtp_port" property="smtpPort" />
+        <result column="exchange_port" property="exchangePort" />
+        <result column="custom" property="custom" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, domain, pop_host, imap_host, exchange_host, create_time, modified, removed, smtp_host, imap_port, pop_port, smtp_port, exchange_port, custom
+    </sql>
+
+</mapper>
