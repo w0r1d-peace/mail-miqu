@@ -1,5 +1,7 @@
 package com.islet.service.mail;
-import com.islet.domain.dto.mail.TaskSaveDTO;
+import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,8 +14,22 @@ import com.islet.domain.dto.mail.TaskSaveDTO;
 public interface ITaskService {
 
     /**
-     * 新增邮箱
+     * 新增
      * @param dto
      */
-    Long saveTask(TaskSaveDTO dto);
+    Long saveTask(TaskSaveOrUpdateDTO dto);
+
+    /**
+     * 编辑
+     * @param dto
+     * @return
+     */
+    Boolean updateTask(TaskSaveOrUpdateDTO dto);
+
+    /**
+     * 拉取邮件
+     * @param ids
+     * @return
+     */
+    void pullEmail(List<Long> ids);
 }

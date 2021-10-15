@@ -7,7 +7,6 @@ import com.islet.common.web.ResultCode;
  * @date 2021/10/9
  * @description
  */
-
 public class BusinessException extends RuntimeException {
     private static final long serialVersionUID = 1L;
     private final int resultCode;

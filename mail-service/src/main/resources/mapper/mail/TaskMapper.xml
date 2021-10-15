@@ -5,11 +5,6 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.islet.model.mail.Task">
         <id column="id" property="id" />
-        <result column="create_time" property="createTime" />
-        <result column="modified" property="modified" />
-        <result column="removed" property="removed" />
-        <result column="user_id" property="userId" />
-        <result column="creator" property="creator" />
         <result column="email" property="email" />
         <result column="password" property="password" />
         <result column="conn_status" property="connStatus" />
@@ -18,18 +13,24 @@
         <result column="host" property="host" />
         <result column="has_ssl" property="hasSsl" />
         <result column="type" property="type" />
-        <result column="vpn_id" property="vpnId" />
         <result column="monitoring" property="monitoring" />
         <result column="emphasis" property="emphasis" />
         <result column="description" property="description" />
         <result column="read_number" property="readNumber" />
         <result column="un_read_number" property="unReadNumber" />
         <result column="sensitive_number" property="sensitiveNumber" />
+        <result column="create_id" property="createId" />
+        <result column="create_name" property="createName" />
+        <result column="create_time" property="createTime" />
+        <result column="update_id" property="updateId" />
+        <result column="update_name" property="updateName" />
+        <result column="update_time" property="updateTime" />
+        <result column="removed" property="removed" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, create_time, modified, removed, user_id, creator, email, password, conn_status, conn_exception_reason, port, host, has_ssl, type, vpn_id, monitoring, emphasis, description, read_number, un_read_number, sensitive_number
+        id, create_id, create_name, create_time, update_id, update_name, update_time, email, password, conn_status, conn_exception_reason, port, host, has_ssl, type, monitoring, emphasis, description, read_number, un_read_number, sensitive_number
     </sql>
 
 </mapper>

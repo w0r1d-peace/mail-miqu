@@ -33,33 +33,6 @@ public class Task implements Serializable {
     private Long id;
 
     /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    @Version
-    private Date modified;
-
-    /**
-     * 逻辑删除 0-否 1-是
-     */
-    @TableLogic
-    private Boolean removed;
-
-    /**
-     * 用户ID
-     */
-    private Long userId;
-
-    /**
-     * 创建人
-     */
-    private String creator;
-
-    /**
      * 邮箱帐号
      */
     private String email;
@@ -100,11 +73,6 @@ public class Task implements Serializable {
     private Integer type;
 
     /**
-     * 节点ID
-     */
-    private String vpnId;
-
-    /**
      * 是否监控 0-否 1-是
      */
     private Boolean monitoring;
@@ -134,5 +102,40 @@ public class Task implements Serializable {
      */
     private Integer sensitiveNumber;
 
+    /**
+     * 创建人Id
+     */
+    private Long createId;
+
+    /**
+     * 创建者名字
+     */
+    private String createName;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 更新者id
+     */
+    private Long updateId;
+
+    /**
+     * 更新者名字
+     */
+    private String updateName;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+    /**
+     * 是否删除 0未删 1已删
+     */
+    @TableLogic
+    private Boolean removed;
 
 }

@@ -1,6 +1,5 @@
 package com.islet.domain.dto.mail;
 
-import com.islet.domain.dto.BaseDTO;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -14,7 +13,13 @@ import javax.validation.constraints.NotNull;
  * @description
  */
 @Data
-public class TaskSaveDTO extends BaseDTO {
+public class TaskSaveOrUpdateDTO {
+
+    /**
+     * 主键
+     */
+    private Long id;
+
     /**
      * 邮箱
      */

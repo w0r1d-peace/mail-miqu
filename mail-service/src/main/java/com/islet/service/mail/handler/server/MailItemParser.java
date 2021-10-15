@@ -175,7 +175,6 @@ public class MailItemParser {
                 return universalMail;
             }
         } catch (Exception var8) {
-            log.error("var8--------" + var8.getMessage() + "---------------");
             var8.printStackTrace();
             throw new MailPlusException(var8.getMessage());
         }

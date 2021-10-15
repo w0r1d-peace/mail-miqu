@@ -1,10 +1,11 @@
 package com.islet.service.mail.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.islet.exception.BusinessException;
-import com.islet.domain.dto.mail.TaskSaveDTO;
+import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
 import com.islet.enums.ConnStatusEnum;
 import com.islet.enums.TaskProtocolTypeEnum;
+import com.islet.exception.BusinessException;
+import com.islet.exception.MailPlusException;
 import com.islet.mapper.mail.TaskMapper;
 import com.islet.model.mail.Task;
 import com.islet.service.mail.ITaskService;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,11 +30,11 @@ import java.util.Optional;
 public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements ITaskService {
 
     @Override
-    public Long saveTask(TaskSaveDTO dto) {
+    public Long saveTask(TaskSaveOrUpdateDTO dto) {
         // 判断邮箱是否已录入
         int count = super.count(new LambdaQueryWrapper<Task>()
                 .eq(Task::getEmail, dto.getEmail())
-                .eq(Task::getUserId, dto.getUserId())
+              //  .eq(Task::getCreateId, dto.getUserId())
                 .eq(Task::getRemoved, false)
         );
         if (count > 0) {
@@ -43,13 +45,18 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         MailConnCfg mailConnCfg = new MailConnCfg();
         BeanUtils.copyProperties(dto, mailConnCfg);
         mailConnCfg.setSsl(Optional.ofNullable(dto.getHasSsl()).orElse(false));
-        connTest(mailConnCfg, dto.getType());
+        IMailService mailService = getMailService(dto.getType());
+        getMailConn(mailConnCfg, mailService);
 
         Date now = new Date();
         Task task = new Task();
         BeanUtils.copyProperties(dto, task);
+        /*task.setCreateId(dto.getUserId());
+        task.setCreateName(dto.getCreator());*/
         task.setCreateTime(now);
-        task.setModified(now);
+        /*task.setUpdateId(dto.getUserId());
+        task.setUpdateName(dto.getCreator());*/
+        task.setUpdateTime(now);
         task.setRemoved(Boolean.FALSE);
         task.setConnStatus(ConnStatusEnum.CONN_NORMAL.getConnStatus());
         task.setReadNumber(0);  //已读数量
@@ -60,16 +67,66 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         return task.getId();
     }
 
+    @Override
+    public Boolean updateTask(TaskSaveOrUpdateDTO dto) {
+        // 判断邮箱是否已录入
+       /* int count = super.count(new LambdaQueryWrapper<Task>()
+                .ne(Task::getId, dto.getUserId())
+                .eq(Task::getEmail, dto.getEmail())
+                .eq(Task::getCreateId, dto.getUserId())
+                .eq(Task::getRemoved, false)
+        );
+        if (count > 0) {
+            throw new BusinessException(String.format("邮箱%s已录入,请勿重复添加", dto.getEmail()));
+        }*/
+
+        // 连接测试
+        MailConnCfg mailConnCfg = new MailConnCfg();
+        BeanUtils.copyProperties(dto, mailConnCfg);
+        mailConnCfg.setSsl(Optional.ofNullable(dto.getHasSsl()).orElse(false));
+        IMailService mailService = getMailService(dto.getType());
+        getMailConn(mailConnCfg, mailService);
+
+        Task task = getById(dto.getId());
+        BeanUtils.copyProperties(dto, task);
+/*        task.setUpdateId(dto.getUserId());
+        task.setUpdateName(dto.getCreator());*/
+        task.setUpdateTime(new Date());
+        return super.updateById(task);
+    }
+
+    @Override
+    public void pullEmail(List<Long> ids) {
+        List<Task> taskList = super.list(new LambdaQueryWrapper<Task>().in(Task::getId, ids));
+        if (taskList != null) {
+            taskList.stream().forEach(task -> {
+                MailConnCfg mailConnCfg = new MailConnCfg();
+                BeanUtils.copyProperties(task, mailConnCfg);
+                IMailService mailService = getMailService(task.getType());
+                MailConn mailConn = getMailConn(mailConnCfg, mailService);
+                try {
+                    List<MailItem> mailItems = mailService.listAll(mailConn, "", null);
+                    for (MailItem mailItem : mailItems) {
+                        UniversalMail universalMail = mailService.parseEmail(mailItem, "C:/Users/EDZ/Desktop/email/");
+                        log.info(universalMail.getUid());
+                    }
+                } catch (MailPlusException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
     /**
-     * 连接测试
+     * 获取
      * @param mailConnCfg
      */
-    private void connTest(MailConnCfg mailConnCfg, int protocolType) {
+    private MailConn getMailConn(MailConnCfg mailConnCfg, IMailService mailService) {
         try {
-            IMailService mailService = getMailService(protocolType);
-            mailService.createConn(mailConnCfg, false);
+            MailConn mailConn = mailService.createConn(mailConnCfg, false);
+            return mailConn;
         } catch (Exception e) {
-            String connExceptionReason = String.format("邮箱协议为【%s】邮箱连接失败，原始错误信息为【%s】", protocolType, e.getMessage());
+            String connExceptionReason = String.format("邮箱连接失败，原始错误信息为【%s】", e.getMessage());
             log.error(connExceptionReason);
             throw new BusinessException(e.getMessage());
         }
