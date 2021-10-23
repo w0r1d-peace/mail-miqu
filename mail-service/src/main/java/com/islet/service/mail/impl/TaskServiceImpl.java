@@ -1,5 +1,6 @@
 package com.islet.service.mail.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
 import com.islet.enums.ConnStatusEnum;
@@ -115,6 +116,42 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                 }
             });
         }
+    }
+
+    @Override
+    public Boolean deleteTask(List<Long> ids, Long userId, String createName) {
+        return super.update(new LambdaUpdateWrapper<Task>()
+                .set(Task::getRemoved, true)
+                .set(Task::getUpdateId, userId)
+                .set(Task::getUpdateName, createName)
+                .set(Task::getUpdateTime, new Date())
+                .in(Task::getId, ids)
+                .eq(Task::getCreateId, userId)
+        );
+    }
+
+    @Override
+    public Boolean emphasis(Long id, Long userId, String createName) {
+        return super.update(new LambdaUpdateWrapper<Task>()
+                .set(Task::getEmphasis, true)
+                .set(Task::getUpdateId, userId)
+                .set(Task::getUpdateName, createName)
+                .set(Task::getUpdateTime, new Date())
+                .eq(Task::getId, id)
+                .eq(Task::getCreateId, userId)
+        );
+    }
+
+    @Override
+    public Boolean monitoring(Long id, Long userId, String createName) {
+        return super.update(new LambdaUpdateWrapper<Task>()
+                .set(Task::getMonitoring, true)
+                .set(Task::getUpdateId, userId)
+                .set(Task::getUpdateName, createName)
+                .set(Task::getUpdateTime, new Date())
+                .eq(Task::getId, id)
+                .eq(Task::getCreateId, userId)
+        );
     }
 
     /**

@@ -32,4 +32,30 @@ public interface ITaskService {
      * @return
      */
     void pullEmail(List<Long> ids);
+
+    /**
+     * 删除任务
+     * @param ids
+     * @return
+     */
+    Boolean deleteTask(List<Long> ids, Long userId, String createName);
+
+    /**
+     * 是否关注目标
+     * @param id
+     * @param userId
+     * @param createName
+     * @return
+     */
+    Boolean emphasis(Long id, Long userId, String createName);
+
+    /**
+     * 是否监控
+     * @param id
+     * @param userId
+     * @param createName
+     * @return
+     */
+    Boolean monitoring(Long id, Long userId, String createName);
 }
+

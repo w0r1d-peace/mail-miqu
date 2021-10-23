@@ -1,14 +1,17 @@
 package com.islet.controller.mail;
 
 import com.islet.common.web.Result;
+import com.islet.controller.AbstractController;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
 import com.islet.service.mail.ITaskService;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -19,7 +22,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/task")
 @Validated
-public class TaskController {
+public class TaskController extends AbstractController {
 
     @Resource
     private ITaskService taskService;
@@ -53,5 +56,32 @@ public class TaskController {
     @ResponseBody
     public void pullEmail(@RequestParam @Valid List<Long> ids) {
         taskService.pullEmail(ids);
+    }
+
+    /**
+     * 批量删除
+     */
+    @PostMapping("/delete_task")
+    @ResponseBody
+    public Result<Boolean> deleteTask(@RequestBody @NotNull(message = "请选择删除邮箱") List<Long> ids) {
+        return Result.success(taskService.deleteTask(ids, super.getUserId(), super.getCreateName()));
+    }
+
+    /**
+     * 是否关注目标
+     * */
+    @PostMapping("/emphasis")
+    @ResponseBody
+    public Result<Boolean> emphasis(@RequestBody @NotNull(message = "主键不能为空") Long id) {
+        return Result.success(taskService.emphasis(id, super.getUserId(), super.getCreateName()));
+    }
+
+    /**
+     * 是否监控
+     * */
+    @PostMapping("/monitoring")
+    @ResponseBody
+    public Result<Boolean> monitoring(@RequestBody @NotNull(message = "主键不能为空") Long id) {
+        return Result.success(taskService.monitoring(id, super.getUserId(), super.getCreateName()));
     }
 }

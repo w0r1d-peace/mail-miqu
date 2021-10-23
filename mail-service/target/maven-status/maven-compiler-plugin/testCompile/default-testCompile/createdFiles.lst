@@ -1,1 +1,4 @@
 com\islet\MailServiceApplicationTests.class
+com\islet\mail\GetMailInfoThread.class
+com\islet\mail\MailTest.class
+com\islet\mail\MailImfo.class
