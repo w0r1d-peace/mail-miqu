@@ -11,9 +11,13 @@ import com.islet.mapper.mail.TaskMapper;
 import com.islet.model.mail.Task;
 import com.islet.service.mail.ITaskService;
 import com.islet.service.mail.handler.server.*;
+import com.islet.support.elasticsearch.domain.EmailEs;
+import com.islet.support.elasticsearch.service.IEmailTransClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +33,9 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements ITaskService {
+
+    @Resource
+    private IEmailTransClientService emailTransClientService;
 
     @Override
     public Long saveTask(TaskSaveOrUpdateDTO dto) {
@@ -109,6 +116,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                     List<MailItem> mailItems = mailService.listAll(mailConn, "", null);
                     for (MailItem mailItem : mailItems) {
                         UniversalMail universalMail = mailService.parseEmail(mailItem, "C:/Users/EDZ/Desktop/email/");
+                        EmailEs emailEs = new EmailEs();
+                        BeanUtils.copyProperties(universalMail, emailEs);
+                        emailTransClientService.saveEmail(emailEs);
                         log.info(universalMail.getUid());
                     }
                 } catch (MailPlusException e) {
