@@ -92,6 +92,12 @@
 			<artifactId>jieba-analysis</artifactId>
 			<version>1.0.2</version>
 		</dependency>
+		<!--绘制图表-->
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.19</version>
+		</dependency>
 	</dependencies>
 
 	<build>
