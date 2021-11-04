@@ -4,14 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.islet.domain.dto.mail.CategorySaveOrUpdateDTO;
+import com.islet.domain.vo.mail.CategoryKeywordListVO;
 import com.islet.domain.vo.mail.CategoryListVO;
 import com.islet.exception.BusinessException;
 import com.islet.mapper.mail.CategoryMapper;
 import com.islet.model.mail.Category;
+import com.islet.model.mail.CategoryKeyword;
+import com.islet.service.mail.ICategoryKeywordService;
 import com.islet.service.mail.ICategoryService;
 import com.islet.util.CachedBeanCopierUtil;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -26,8 +30,11 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements ICategoryService {
 
+    @Resource
+    private ICategoryKeywordService categoryKeywordService;
+
     @Override
-    public List<CategoryListVO> list(Long userId) {
+    public List<CategoryListVO> categoryList(Long userId) {
         List<Category> list = super.list(new LambdaQueryWrapper<Category>().eq(Category::getCreateId, userId).eq(Category::getRemoved, false));
         return CachedBeanCopierUtil.copyList(list, CategoryListVO.class);
     }
@@ -77,5 +84,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 .eq(Category::getId, id)
                 .eq(Category::getCreateId, userId)
         );
+    }
+
+    @Override
+    public List<CategoryKeywordListVO> categoryKeywordList(Long id, Long userId) {
+        List<CategoryKeyword> categoryKeywordList = categoryKeywordService.listByCategoryId(id, userId);
+        CachedBeanCopierUtil.copyList(categoryKeywordList, CategoryKeywordListVO.class);
+        return null;
     }
 }

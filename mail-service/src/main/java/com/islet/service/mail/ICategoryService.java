@@ -2,9 +2,9 @@ package com.islet.service.mail;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.islet.domain.dto.mail.CategorySaveOrUpdateDTO;
+import com.islet.domain.vo.mail.CategoryKeywordListVO;
 import com.islet.domain.vo.mail.CategoryListVO;
 import com.islet.model.mail.Category;
-
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ public interface ICategoryService extends IService<Category> {
      * @param userId
      * @return
      */
-    List<CategoryListVO> list(Long userId);
+    List<CategoryListVO> categoryList(Long userId);
 
     /**
      * 新增分类
@@ -44,4 +44,12 @@ public interface ICategoryService extends IService<Category> {
      * @return
      */
     Boolean deleteCategory(Long id, Long userId, String createName);
+
+    /**
+     * 分类关键字列表
+     * @param id
+     * @param userId
+     * @return
+     */
+    List<CategoryKeywordListVO> categoryKeywordList(Long id, Long userId);
 }

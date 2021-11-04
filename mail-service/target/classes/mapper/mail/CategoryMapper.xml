@@ -6,16 +6,18 @@
     <resultMap id="BaseResultMap" type="com.islet.model.mail.Category">
         <id column="id" property="id" />
         <result column="category" property="category" />
+        <result column="create_id" property="createId" />
+        <result column="create_name" property="createName" />
         <result column="create_time" property="createTime" />
-        <result column="modified" property="modified" />
+        <result column="update_id" property="updateId" />
+        <result column="update_name" property="updateName" />
+        <result column="update_time" property="updateTime" />
         <result column="removed" property="removed" />
-        <result column="user_id" property="userId" />
-        <result column="creator" property="creator" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, category, create_time, modified, removed, user_id, creator
+        id, category, create_id, create_name, create_time, update_id, update_name, update_time
     </sql>
 
 </mapper>
