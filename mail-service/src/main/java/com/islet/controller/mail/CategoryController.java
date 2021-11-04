@@ -16,4 +16,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/mail_category/mail-category")
 public class CategoryController {
 
+
 }

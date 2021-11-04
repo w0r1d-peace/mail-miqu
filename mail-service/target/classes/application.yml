@@ -37,3 +37,7 @@ mybatis-plus:
       logic-not-delete-value: 0
       # 删除后
       logic-delete-value: 1
+
+email:
+  storage:
+    path: C:/Users/EDZ/Desktop/email/

@@ -1,5 +1,6 @@
 package com.islet.service.mail;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
+import com.islet.domain.vo.mail.TaskListVO;
 
 import java.util.List;
 
@@ -57,5 +58,13 @@ public interface ITaskService {
      * @return
      */
     Boolean monitoring(Long id, Long userId, String createName);
+
+    /**
+     * 任务列表
+     * @param email
+     * @param userId
+     * @return
+     */
+    List<TaskListVO> list(String email, Long userId);
 }
 

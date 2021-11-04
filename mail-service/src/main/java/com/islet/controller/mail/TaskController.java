@@ -3,6 +3,7 @@ package com.islet.controller.mail;
 import com.islet.common.web.Result;
 import com.islet.controller.AbstractController;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
+import com.islet.domain.vo.mail.TaskListVO;
 import com.islet.service.mail.ITaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -82,5 +83,10 @@ public class TaskController extends AbstractController {
     @ResponseBody
     public Result<Boolean> monitoring(@RequestBody @NotNull(message = "主键不能为空") Long id) {
         return Result.success(taskService.monitoring(id, super.getUserId(), super.getCreateName()));
+    }
+
+    @GetMapping("list")
+    public Result<List<TaskListVO>> list(String email) {
+        return Result.success(taskService.list(email, super.getUserId()));
     }
 }

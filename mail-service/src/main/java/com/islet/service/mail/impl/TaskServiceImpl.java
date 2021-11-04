@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
+import com.islet.domain.vo.mail.TaskListVO;
 import com.islet.enums.ConnStatusEnum;
 import com.islet.enums.TaskProtocolTypeEnum;
 import com.islet.exception.BusinessException;
@@ -13,8 +14,11 @@ import com.islet.service.mail.ITaskService;
 import com.islet.service.mail.handler.server.*;
 import com.islet.support.elasticsearch.domain.EmailEs;
 import com.islet.support.elasticsearch.service.IEmailTransClientService;
+import com.islet.util.CachedBeanCopierUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,6 +40,9 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
     @Resource
     private IEmailTransClientService emailTransClientService;
+
+    @Value("${email.storage.path}")
+    private String emailStoragePath;
 
     @Override
     public Long saveTask(TaskSaveOrUpdateDTO dto) {
@@ -115,11 +122,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                 try {
                     List<MailItem> mailItems = mailService.listAll(mailConn, "", null);
                     for (MailItem mailItem : mailItems) {
-                        UniversalMail universalMail = mailService.parseEmail(mailItem, "C:/Users/EDZ/Desktop/email/");
+                        UniversalMail universalMail = mailService.parseEmail(mailItem, emailStoragePath);
                         EmailEs emailEs = new EmailEs();
                         BeanUtils.copyProperties(universalMail, emailEs);
                         emailTransClientService.saveEmail(emailEs);
-                        log.info(universalMail.getUid());
                     }
                 } catch (MailPlusException e) {
                     e.printStackTrace();
@@ -162,6 +168,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                 .eq(Task::getId, id)
                 .eq(Task::getCreateId, userId)
         );
+    }
+
+    @Override
+    public List<TaskListVO> list(String email, Long userId) {
+        List<Task> list = super.list(new LambdaQueryWrapper<Task>().eq(Task::getCreateId, userId).eq(Task::getRemoved, false).eq(StringUtils.isNotBlank(email), Task::getEmail, email));
+        return CachedBeanCopierUtil.copyList(list, TaskListVO.class);
     }
 
     /**
