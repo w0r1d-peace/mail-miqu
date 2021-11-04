@@ -85,7 +85,12 @@ public class TaskController extends AbstractController {
         return Result.success(taskService.monitoring(id, super.getUserId(), super.getCreateName()));
     }
 
-    @GetMapping("list")
+    /**
+     * 邮箱列表
+     * @param email
+     * @return
+     */
+    @GetMapping("/list")
     @ResponseBody
     public Result<List<TaskListVO>> list(String email) {
         return Result.success(taskService.list(email, super.getUserId()));
