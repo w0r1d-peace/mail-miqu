@@ -86,6 +86,7 @@ public class TaskController extends AbstractController {
     }
 
     @GetMapping("list")
+    @ResponseBody
     public Result<List<TaskListVO>> list(String email) {
         return Result.success(taskService.list(email, super.getUserId()));
     }

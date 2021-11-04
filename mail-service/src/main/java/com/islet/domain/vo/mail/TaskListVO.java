@@ -1,5 +1,7 @@
 package com.islet.domain.vo.mail;
 
+import lombok.*;
+
 import java.util.Date;
 
 /**
@@ -7,6 +9,11 @@ import java.util.Date;
  * @date 2021/11/3
  * @description
  */
+@Data
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskListVO {
 
     /**
