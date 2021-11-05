@@ -17,4 +17,6 @@ public interface IEmailTransClientService {
      * @return
      */
     EmailEs saveEmail(EmailEs emailEs);
+
+    void getMailContent(Long emailId);
 }
