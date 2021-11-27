@@ -23,4 +23,9 @@ public class EmailTransClientServiceImpl implements IEmailTransClientService {
     public EmailEs saveEmail(EmailEs emailEs) {
         return repository.save(emailEs);
     }
+
+    @Override
+    public void getMailContent(Long emailId) {
+
+    }
 }

@@ -1,4 +1,8 @@
+com\islet\AnalysisTest.class
 com\islet\MailServiceApplicationTests.class
+com\islet\spam\SpamMailDetectionJointProbability.class
 com\islet\mail\GetMailInfoThread.class
-com\islet\mail\MailTest.class
 com\islet\mail\MailImfo.class
+com\islet\spam\test.class
+com\islet\mail\MailTest.class
+com\islet\spam\SpamMailDetectionBayes.class

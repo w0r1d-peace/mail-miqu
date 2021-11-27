@@ -1,6 +1,7 @@
 package com.islet.service.base;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.islet.domain.dto.base.UserLoginDTO;
 import com.islet.model.base.User;
 
 /**
@@ -13,5 +14,17 @@ import com.islet.model.base.User;
  */
 public interface IUserService extends IService<User> {
 
+    /**
+     * 用户详情
+     * @param id
+     * @return
+     */
     User detail(Long id);
+
+    /**
+     * 登录
+     * @param dto
+     * @param token
+     */
+    void login(UserLoginDTO dto, String token);
 }

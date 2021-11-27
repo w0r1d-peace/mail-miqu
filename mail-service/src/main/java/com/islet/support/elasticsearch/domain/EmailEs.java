@@ -2,6 +2,7 @@ package com.islet.support.elasticsearch.domain;
 
 import com.islet.service.mail.handler.server.UniversalAttachment;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @date 2021/11/03
  */
 @Data
+@ToString
 @Document(indexName = "emailx")
 public class EmailEs implements Serializable {
 

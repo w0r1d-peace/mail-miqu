@@ -1,6 +1,7 @@
 package com.islet.domain.dto.base;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
  * @date 2021/10/9
  * @description
  */
+@ToString
 @Data
 public class UserLoginDTO {
 
