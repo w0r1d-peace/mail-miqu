@@ -1,22 +1,32 @@
 package com.islet.service.base.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.islet.common.util.RedisKeyUtil;
 import com.islet.common.web.ResultCode;
 import com.islet.domain.dto.base.UserLoginDTO;
+import com.islet.domain.dto.base.UserPageDTO;
+import com.islet.domain.vo.PageVO;
+import com.islet.domain.vo.bese.UserPageVO;
 import com.islet.exception.BusinessException;
 import com.islet.mapper.base.PermissionMapper;
 import com.islet.mapper.base.UserMapper;
+import com.islet.model.base.RoleUser;
 import com.islet.model.base.User;
+import com.islet.service.base.IRoleUserService;
 import com.islet.service.base.IUserService;
 import com.islet.util.MD5Util;
+import com.islet.util.PageUtil;
 import com.islet.util.RedisService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,6 +40,8 @@ import java.util.Set;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    @Resource
+    private IRoleUserService roleUserService;
     @Resource
     private PermissionMapper permissionMapper;
     @Resource
@@ -52,6 +64,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         Long userId = checkUserInfo(dto.getUsername(), dto.getPassword(), token);
         // 获取用户的权限,将用户权限保存在缓存中
         saveUserPermission(userId);
+    }
+
+    @Override
+    public PageVO<UserPageVO> userPage(UserPageDTO dto) {
+        Set<Long> userIds = new HashSet<>();
+        if (dto.getRoleId() != null) {
+            List<RoleUser> roleUsersList = roleUserService.list(
+                    new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getRoleId, dto.getRoleId()));
+            roleUsersList.forEach(roleUser -> {
+                userIds.add(roleUser.getUserId());
+            });
+        }
+
+        // 组装条件
+        LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>()
+                .lambda()
+                .in(dto.getRoleId() != null, User::getId, userIds)
+                .like(StringUtils.isNotEmpty(dto.getUsername()), User::getUsername, dto.getUsername())
+                .like(StringUtils.isNotEmpty(dto.getName()), User::getName, dto.getName())
+                .like(StringUtils.isNotEmpty(dto.getPhone()), User::getPhone, dto.getPhone())
+                .ne(User::getUserId, 0L);
+
+        return PageUtil.getPageVOByIPage(page -> (IPage<User>) super.page(page
+                , queryWrapper)
+                , dto.getCurrentPage()
+                , dto.getPageSize()
+                , UserPageVO.class);
     }
 
     /**
