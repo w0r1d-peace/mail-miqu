@@ -22,10 +22,10 @@ public class MD5Util {
     }
 
     public static void main(String [] args) {
-        String ykhwzx2019 = inputPassToFormPass("ykhwzx2019");
+        String ykhwzx2019 = inputPassToFormPass("123456");
         System.out.println(ykhwzx2019);
-		/*String s = formPassToDBPass(ykhwzx2019);
-		System.out.println("s = " + s);*/
+		String s = formPassToDBPass("123456");
+		System.out.println("s = " + s);
     }
 
 }

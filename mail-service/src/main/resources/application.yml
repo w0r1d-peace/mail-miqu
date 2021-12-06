@@ -23,6 +23,18 @@ spring:
     expose-session-attributes: true
     suffix: .ftl
 
+  redis:
+    database: 0
+    host: localhost
+    password:
+    port: 6379
+    timeout: 2000
+    maxActive: 100000
+    maxIdle: 100000
+    minIdle: 0
+    maxWait: 1000
+    shutdownTimeout: 100
+    serializer: org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 
 mybatis-plus:
   configuration:

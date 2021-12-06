@@ -1,0 +1,1 @@
+let contextPath = 'http://localhost:8080/mail';
