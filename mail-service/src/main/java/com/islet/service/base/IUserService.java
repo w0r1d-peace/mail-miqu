@@ -3,9 +3,12 @@ package com.islet.service.base;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.islet.domain.dto.base.UserLoginDTO;
 import com.islet.domain.dto.base.UserPageDTO;
+import com.islet.domain.dto.base.UserSaveOrUpdateDTO;
 import com.islet.domain.vo.PageVO;
 import com.islet.domain.vo.bese.UserPageVO;
 import com.islet.model.base.User;
+
+import java.util.List;
 
 /**
  * <p>
@@ -36,4 +39,27 @@ public interface IUserService extends IService<User> {
      * @param dto
      */
     PageVO<UserPageVO> userPage(UserPageDTO dto);
+
+    /**
+     * 保存用户
+     * @param dto
+     * @return
+     */
+    Long saveUser(UserSaveOrUpdateDTO dto);
+
+    /**
+     * 编辑用户
+     * @param dto
+     * @return
+     */
+    Boolean editUser(UserSaveOrUpdateDTO dto);
+
+    /**
+     * 删除用户
+     * @param ids
+     * @param userId
+     * @param createName
+     * @return
+     */
+    Boolean deleteUser(List<Long> ids, Long userId, String createName);
 }

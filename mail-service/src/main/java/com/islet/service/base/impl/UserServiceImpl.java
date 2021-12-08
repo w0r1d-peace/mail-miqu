@@ -8,26 +8,30 @@ import com.islet.common.util.RedisKeyUtil;
 import com.islet.common.web.ResultCode;
 import com.islet.domain.dto.base.UserLoginDTO;
 import com.islet.domain.dto.base.UserPageDTO;
+import com.islet.domain.dto.base.UserSaveOrUpdateDTO;
 import com.islet.domain.vo.PageVO;
 import com.islet.domain.vo.bese.UserPageVO;
 import com.islet.exception.BusinessException;
 import com.islet.mapper.base.PermissionMapper;
 import com.islet.mapper.base.UserMapper;
+import com.islet.model.base.Role;
 import com.islet.model.base.RoleUser;
 import com.islet.model.base.User;
+import com.islet.service.base.IRoleService;
 import com.islet.service.base.IRoleUserService;
 import com.islet.service.base.IUserService;
 import com.islet.util.MD5Util;
 import com.islet.util.PageUtil;
 import com.islet.util.RedisService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.stream.Collectors.toSet;
 
 /**
  * <p>
@@ -40,6 +44,8 @@ import java.util.Set;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    @Resource
+    private IRoleService roleService;
     @Resource
     private IRoleUserService roleUserService;
     @Resource
@@ -91,6 +97,160 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 , dto.getCurrentPage()
                 , dto.getPageSize()
                 , UserPageVO.class);
+    }
+
+    @Override
+    public Long saveUser(UserSaveOrUpdateDTO dto) {
+        //查询用户名是否已经存在
+        boolean exist = existByUsername(dto.getUsername(), null, dto.getUserId());
+        if (exist) {
+            throw new BusinessException(ResultCode.PARAMETER_FAIL, "用户名已经存在");
+        }
+
+        User user = new User();
+        BeanUtils.copyProperties(dto, user);
+        // 保存数据库再次加密
+        user.setPassword(MD5Util.formPassToDBPass(dto.getPassword()));
+        user.setCreateTime(new Date());
+        user.setModified(new Date());
+        user.setRemoved(false);
+        String rolenameString = "";
+        for(String rolename : dto.getRolenames()) {
+            rolenameString += rolename+",";
+        }
+        user.setRolename(rolenameString.substring(0, rolenameString.length()-1));
+        user.setUserId(dto.getUserId());
+        user.setCreator(dto.getCreator());
+        //保存用户记录
+        this.save(user);
+
+        //批量更新ROLE
+        batchUpdateRole(null, dto.getRoleIds());
+        //批量保存ROLEUSER
+        batchSaveRoleUser(user.getId(), dto.getRoleIds());
+        return user.getId();
+    }
+
+    @Override
+    public Boolean editUser(UserSaveOrUpdateDTO dto) {
+        User user = this.getById(dto.getId());
+        if (user == null) {
+            throw new BusinessException(String.format("获取不到ID为{%s}的记录", dto.getId()));
+        }
+        String rolenameString = "";
+        for(String rolename : dto.getRolenames()) {
+            rolenameString += rolename+",";
+        }
+        user.setRolename(rolenameString.substring(0, rolenameString.length()-1));
+        BeanUtils.copyProperties(dto, user);
+
+        //批量更新ROLE
+        batchUpdateRole(dto.getId(), dto.getRoleIds());
+
+        //保存用户记录
+        this.updateById(user);
+        //把所属角色删除，重新添加记录
+        roleUserService.remove(new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getUserId, dto.getId()));
+
+        //批量保存ROLEUSER
+        batchSaveRoleUser(user.getId(), dto.getRoleIds());
+        return true;
+    }
+
+    @Override
+    public Boolean deleteUser(List<Long> ids, Long userId, String createName) {
+        //批量更新角色中用户数量
+        batchUpdateRole(ids);
+        //删除
+        this.removeByIds(ids);
+        //删除关联数据
+        roleUserService.remove(new LambdaQueryWrapper<RoleUser>().in(RoleUser::getUserId, ids));
+        return true;
+    }
+
+    /**
+     * 批量更新ROLE
+     * @param userId
+     * @param roleIds
+     * @throws Exception
+     */
+    public void batchUpdateRole(Long userId, Set<Long> roleIds) {
+        List<Role> roleList = new ArrayList<>();
+        if (userId == null) {
+            roleIds.forEach(roleId -> {
+                Role role = roleService.getById(roleId);
+                role.setUserNumber(role.getUserNumber() + 1);
+                roleList.add(role);
+            });
+        } else {
+            Set<Long> plusSet;
+            Set<Long> minusSet;
+            Set<Long> userRoleIds = new HashSet<>();
+            List<RoleUser> roleUserList = roleUserService.list(
+                    new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getUserId, userId));
+            roleUserList.forEach(roleUser -> {
+                userRoleIds.add(roleUser.getRoleId());
+            });
+            //取差集 roleIds - userRoleIds
+            plusSet = roleIds.stream().filter(item -> !userRoleIds.contains(item)).collect(toSet());
+            //用户数量加1
+            plusSet.forEach(roleId -> {
+                Role role = roleService.getById(roleId);
+                role.setUserNumber(role.getUserNumber() + 1);
+                roleList.add(role);
+            });
+            //取差集 userRoleIds - roleIds
+            minusSet = userRoleIds.stream().filter(item -> !roleIds.contains(item)).collect(toSet());
+            //用户数量减1
+            minusSet.forEach(roleId -> {
+                Role role = roleService.getById(roleId);
+                role.setUserNumber(role.getUserNumber() - 1);
+                roleList.add(role);
+            });
+        }
+        if (!roleList.isEmpty()) {
+            //批量更新ROLE
+            roleService.updateBatchById(roleList);
+        }
+    }
+
+    /**
+     * 批量保存ROLEUSER
+     * @param userId
+     * @param roleIds
+     * @return
+     * @throws Exception
+     */
+    private void batchSaveRoleUser(Long userId, Set<Long> roleIds) {
+        List<RoleUser> roleUserList = new ArrayList<>();
+        roleIds.forEach(roleId -> {
+            //封装对象
+            RoleUser roleUser = new RoleUser();
+            roleUser.setUserId(userId);
+            roleUser.setRoleId(roleId);
+            roleUserList.add(roleUser);
+        });
+        roleUserService.saveBatch(roleUserList);
+    }
+
+    /**
+     * 用户名是否已经存在
+     * @param username
+     * @param id
+     * @param userId
+     * @return
+     */
+    private boolean existByUsername(String username, Long id, Long userId) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, username)
+                .eq(User::getUserId, userId);
+
+        if (id != null) {
+            queryWrapper.ne(User::getId, id);
+        }
+
+        int count = this.count(queryWrapper);
+        return count > 0 ? true : false;
     }
 
     /**
@@ -155,4 +315,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new RuntimeException();
         }
     }
+
+    /**
+     * 批量更新ROLE
+     * @param userIds
+     * @throws Exception
+     */
+    public void batchUpdateRole(List<Long> userIds) {
+        List<Role> roleList = new ArrayList<>();
+        List<RoleUser> roleUserList = roleUserService.list(
+                new LambdaQueryWrapper<RoleUser>().in(RoleUser::getUserId, userIds));
+        List<Long> roleIdList = new ArrayList<>();
+
+        roleUserList.forEach(roleUser -> {
+            roleIdList.add(roleUser.getRoleId());
+        });
+        if (!roleIdList.isEmpty()) {
+            //获取list中元素出现的个数
+            Map<Long, Integer> map = frequencyOfListElements(roleIdList);
+            map.forEach((k, v) -> {
+                Role role = roleService.getById(k);
+                role.setUserNumber(role.getUserNumber() - v);
+                roleList.add(role);
+            });
+            //批量更新ROLE
+            roleService.updateBatchById(roleList);
+        }
+    }
+
+    /**
+     * 统计list中每个元素出现的次数
+     */
+    public Map<Long,Integer> frequencyOfListElements(List<Long> items) {
+        if (items == null || items.size() == 0) return null;
+        Map<Long, Integer> map = new HashMap<>();
+        for (Long temp : items) {
+            Integer count = map.get(temp);
+            map.put(temp, (count == null) ? 1 : count + 1);
+        }
+        return map;
+    }
+
 }

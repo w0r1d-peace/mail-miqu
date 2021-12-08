@@ -1,16 +1,17 @@
 package com.islet.controller.base;
 import com.islet.common.web.Result;
+import com.islet.controller.AbstractController;
 import com.islet.domain.dto.base.UserPageDTO;
+import com.islet.domain.dto.base.UserSaveOrUpdateDTO;
 import com.islet.domain.vo.PageVO;
 import com.islet.domain.vo.bese.UserPageVO;
-import com.islet.model.base.User;
 import com.islet.service.base.IUserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <p>
@@ -21,9 +22,8 @@ import javax.validation.Valid;
  * @since 2021-09-18
  */
 @Controller
-@Slf4j
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends AbstractController {
 
     @Resource
     private IUserService userService;
@@ -32,16 +32,40 @@ public class UserController {
      * 列表
      * @return
      */
-    @PostMapping("/page")
+    @GetMapping("/page")
     @ResponseBody
     public Result<PageVO<UserPageVO>> page(@Valid UserPageDTO dto) {
         PageVO<UserPageVO> page = userService.userPage(dto);
         return Result.success(page);
     }
 
-    @RequestMapping(value = "detail", method = RequestMethod.GET)
-    public void detail(@RequestParam Long id) {
-        User user = userService.detail(id);
-        log.info("{}", user);
+    /**
+     * 新增
+     * @return
+     */
+    @PostMapping("/save")
+    @ResponseBody
+    public Result<Long> save(@RequestBody @Valid UserSaveOrUpdateDTO dto) {
+        return Result.success(userService.saveUser(dto));
+    }
+
+    /**
+     * 修改
+     * @return
+     */
+    @PostMapping("/edit")
+    @ResponseBody
+    public Result<Boolean> edit(@RequestBody @Valid UserSaveOrUpdateDTO dto) {
+        return Result.success(userService.editUser(dto));
+    }
+
+    /**
+     * 删除
+     * @return
+     */
+    @PostMapping("/delete")
+    @ResponseBody
+    public Result<Boolean> delete(@Valid List<Long> ids) {
+        return Result.success(userService.deleteUser(ids, super.getUserId(), super.getCreateName()));
     }
 }

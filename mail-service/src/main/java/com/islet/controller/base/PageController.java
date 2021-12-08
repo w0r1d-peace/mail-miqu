@@ -33,4 +33,10 @@ public class PageController {
     public String welcome() {
         return "welcome";
     }
+
+    @GetMapping("permission")
+    public String permission() { return "permission"; }
+
+    @GetMapping("user")
+    public String user() { return "user"; }
 }
