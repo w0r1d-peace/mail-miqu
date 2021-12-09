@@ -11,6 +11,7 @@ import com.islet.model.base.Role;
 import com.islet.service.base.IRoleService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -51,7 +52,7 @@ public class RoleController extends AbstractController {
      */
     @PostMapping("save")
     @ResponseBody
-    public Result<Long> save(@Valid RoleSavaOrUpdateDTO dto) {
+    public Result<Long> save(@RequestBody @Valid RoleSavaOrUpdateDTO dto) {
         return Result.success(roleService.saveRole(dto));
     }
 
@@ -61,7 +62,7 @@ public class RoleController extends AbstractController {
      */
     @PostMapping("edit")
     @ResponseBody
-    public Result<Boolean> edit(@Valid RoleSavaOrUpdateDTO dto) {
+    public Result<Boolean> edit(@RequestBody @Valid RoleSavaOrUpdateDTO dto) {
         return Result.success(roleService.updateRole(dto));
     }
 
@@ -71,7 +72,7 @@ public class RoleController extends AbstractController {
      */
     @PostMapping("delete")
     @ResponseBody
-    public Result<Boolean> delete(@Valid List<Long> ids) {
+    public Result<Boolean> delete(@RequestBody @Valid List<Long> ids) {
         return Result.success(roleService.deleteRole(ids, super.getUserId(), super.getCreateName()));
     }
 

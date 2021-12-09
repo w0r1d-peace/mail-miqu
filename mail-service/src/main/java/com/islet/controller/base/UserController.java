@@ -65,7 +65,7 @@ public class UserController extends AbstractController {
      */
     @PostMapping("/delete")
     @ResponseBody
-    public Result<Boolean> delete(@Valid List<Long> ids) {
+    public Result<Boolean> delete(@RequestBody @Valid List<Long> ids) {
         return Result.success(userService.deleteUser(ids, super.getUserId(), super.getCreateName()));
     }
 }

@@ -108,7 +108,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
                 new LambdaQueryWrapper<RoleUser>()
                         .in(RoleUser::getRoleId, ids));
         if (count > 0) {
-            throw new BusinessException("存在用户关联角色，不可删除");
+            throw new BusinessException(ResultCode.FAIL_MSG, "存在用户关联角色，不可删除");
         }
 
         //删除角色

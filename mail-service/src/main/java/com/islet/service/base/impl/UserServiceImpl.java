@@ -133,6 +133,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public Boolean editUser(UserSaveOrUpdateDTO dto) {
+        //查询用户名是否已经存在
+        boolean exist = existByUsername(dto.getUsername(), dto.getId(), dto.getUserId());
+        if (exist) {
+            throw new BusinessException(ResultCode.PARAMETER_FAIL, "用户名已经存在");
+        }
+
         User user = this.getById(dto.getId());
         if (user == null) {
             throw new BusinessException(String.format("获取不到ID为{%s}的记录", dto.getId()));
