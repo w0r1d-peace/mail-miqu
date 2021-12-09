@@ -78,6 +78,15 @@
           //  url: '../api/table.json',
             url: 'http://localhost:8080/mail/user/page',
             toolbar: '#toolbarDemo',
+            parseData: function(res) { //res 即为原始返回的数据
+                let resData = res.data;
+                return {
+                    "code": 1000,
+                    "msg": "",
+                    "count": res.count,//解析数据总条数
+                    "data": res //解析数据列表
+                }
+            },
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
@@ -95,16 +104,7 @@
             limits: [10, 15, 20, 25, 50, 100],
             limit: 15,
             page: true,
-            skin: 'line',
-            parseData: function(res) { //res 即为原始返回的数据
-                let resData = res.data;
-                return {
-                    "code": 1000,
-                    "msg": "",
-                    "count": res.count,//解析数据总条数
-                    "data": resData //解析数据列表
-                }
-            }
+            skin: 'line'
         });
 
         // 监听搜索操作

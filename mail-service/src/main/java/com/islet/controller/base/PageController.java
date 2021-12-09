@@ -35,8 +35,8 @@ public class PageController {
     }
 
     @GetMapping("permission")
-    public String permission() { return "permission"; }
+    public String permission() { return "base/permission/list"; }
 
     @GetMapping("user")
-    public String user() { return "user"; }
+    public String user() { return "base/user/list"; }
 }
