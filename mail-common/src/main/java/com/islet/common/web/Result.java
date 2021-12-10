@@ -2,9 +2,9 @@ package com.islet.common.web;
 
 public class Result<T> {
     public static final Result SUCCESS;
-    private int resultCode;
-    private String resultMsg;
-    private T resultData;
+    private int code;
+    private String msg;
+    private T data;
 
     /** @deprecated */
     @Deprecated
@@ -13,60 +13,60 @@ public class Result<T> {
 
     /** @deprecated */
     @Deprecated
-    public Result(T resultData) {
-        this(SUCCESS.resultCode, SUCCESS.resultMsg, resultData);
+    public Result(T data) {
+        this(SUCCESS.code, SUCCESS.msg, data);
     }
 
     /** @deprecated */
     @Deprecated
-    public Result(int resultCode, String resultMsg, T resultData) {
-        this.resultCode = resultCode;
-        this.resultMsg = resultMsg;
-        this.resultData = resultData;
+    public Result(int code, String msg, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
     }
 
-    public int getResultCode() {
-        return this.resultCode;
+    public int getCode() {
+        return code;
     }
 
-    public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getResultMsg() {
-        return this.resultMsg;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setResultMsg(String resultMsg) {
-        this.resultMsg = resultMsg;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public T getResultData() {
-        return this.resultData;
+    public T getData() {
+        return data;
     }
 
-    public void setResultData(T resultData) {
-        this.resultData = resultData;
+    public void setData(T data) {
+        this.data = data;
     }
 
     public String toString() {
-        return "Result{resultCode=" + this.resultCode + ", resultMsg='" + this.resultMsg + '\'' + ", resultData=" + this.resultData + '}';
+        return "Result{code=" + this.code + ", msg='" + this.msg + '\'' + ", data=" + this.data + '}';
     }
 
-    public static <T> Result<T> of(int resultCode, String resultMsg) {
-        return of(resultCode, resultMsg, null);
+    public static <T> Result<T> of(int code, String msg) {
+        return of(code, msg, null);
     }
 
-    public static <T> Result<T> of(int resultCode, String resultMsg, T resultData) {
-        return new Result(resultCode, resultMsg, resultData);
+    public static <T> Result<T> of(int resultCode, String msg, T data) {
+        return new Result(resultCode, msg, data);
     }
 
-    public static <T> Result<T> success(T resultData) {
-        return of(SUCCESS.resultCode, SUCCESS.resultMsg, resultData);
+    public static <T> Result<T> success(T data) {
+        return of(SUCCESS.code, SUCCESS.msg, data);
     }
 
-    public static <T> Result<T> failed(String resultMsg) {
-        return of(ResultCode.FAIL_MSG, resultMsg);
+    public static <T> Result<T> failed(String msg) {
+        return of(ResultCode.FAIL_MSG, msg);
     }
 
     static {

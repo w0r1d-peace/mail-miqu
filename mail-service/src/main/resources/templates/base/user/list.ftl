@@ -66,10 +66,11 @@
 
     </div>
 </div>
+<script src="../common/common.js"></script>
 <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
     layui.use(['form', 'table'], function () {
-        var $ = layui.jquery,
+        let $ = layui.jquery,
             form = layui.form,
             table = layui.table;
 
@@ -80,17 +81,12 @@
             parseData: function(res) { //res 即为原始返回的数据
                 let resData = res.data;
                 return {
-                    "code": 1000,
-                    "msg": "",
-                    "count": res.count,//解析数据总条数
-                    "data": res //解析数据列表
+                    "code": res.code,
+                    "msg": res.msg,
+                    "count": resData.totalCount,//解析数据总条数
+                    "data": resData.list //解析数据列表
                 }
             },
-            defaultToolbar: ['filter', 'exports', 'print', {
-                title: '提示',
-                layEvent: 'LAYTABLE_TIPS',
-                icon: 'layui-icon-tips'
-            }],
             cols: [[
                 {type: "checkbox", width: 50},
                 {field: 'username', width: 120, title: '用户名'},
@@ -101,14 +97,14 @@
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
+            limit: 10,
             page: true,
             skin: 'line'
         });
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
+            let result = JSON.stringify(data.field);
             layer.alert(result, {
                 title: '最终的搜索信息'
             });
@@ -131,20 +127,21 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
+                let index = layer.open({
                     title: '添加用户',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '../page/table/add.html',
+                    content:  contextPath + '/page/user/add'
+
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
                 });
             } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
+                let checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
                 layer.alert(JSON.stringify(data));
             }
@@ -156,10 +153,10 @@
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
-            var data = obj.data;
+            let data = obj.data;
             if (obj.event === 'edit') {
 
-                var index = layer.open({
+                let index = layer.open({
                     title: '编辑用户',
                     type: 2,
                     shade: 0.2,

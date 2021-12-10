@@ -127,16 +127,17 @@
 
     </div>
 </div>
+<script src="../common/common.js"></script>
 <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="../js/lay-config.js?v=2.0.0" charset="utf-8"></script>
 <script>
     layui.use(['jquery', 'layer', 'miniAdmin','miniTongji'], function () {
-        var $ = layui.jquery,
+        let $ = layui.jquery,
             layer = layui.layer,
             miniAdmin = layui.miniAdmin,
             miniTongji = layui.miniTongji;
 
-        var options = {
+        let options = {
             iniUrl: "../api/init.json",    // 初始化接口
             clearUrl: "../api/clear.json", // 缓存清理接口
             urlHashLocation: true,      // 是否打开hash定位

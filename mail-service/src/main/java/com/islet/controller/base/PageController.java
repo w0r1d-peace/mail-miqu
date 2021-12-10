@@ -39,4 +39,10 @@ public class PageController {
 
     @GetMapping("user")
     public String user() { return "base/user/list"; }
+
+    @GetMapping("user/add")
+    public String userAdd() { return "base/user/add"; }
+
+    @GetMapping("user/edit")
+    public String userEdit() { return "base/user/edit"; }
 }

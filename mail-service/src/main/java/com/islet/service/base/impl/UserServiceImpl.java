@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.islet.common.util.RedisKeyUtil;
 import com.islet.common.web.ResultCode;
+import com.islet.domain.dto.base.RoleIdNameDTO;
 import com.islet.domain.dto.base.UserLoginDTO;
 import com.islet.domain.dto.base.UserPageDTO;
 import com.islet.domain.dto.base.UserSaveOrUpdateDTO;
@@ -115,8 +116,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setModified(new Date());
         user.setRemoved(false);
         String rolenameString = "";
-        for(String rolename : dto.getRolenames()) {
-            rolenameString += rolename+",";
+        Set<RoleIdNameDTO> roleList = dto.getRoleList();
+        for (RoleIdNameDTO roleIdName : roleList) {
+            rolenameString += roleIdName.getName() + ",";
         }
         user.setRolename(rolenameString.substring(0, rolenameString.length()-1));
         user.setUserId(dto.getUserId());
@@ -124,10 +126,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         //保存用户记录
         this.save(user);
 
+        Set<Long> roleIds = roleList.stream().map(RoleIdNameDTO::getId).collect(toSet());
         //批量更新ROLE
-        batchUpdateRole(null, dto.getRoleIds());
+        batchUpdateRole(null, roleIds);
         //批量保存ROLEUSER
-        batchSaveRoleUser(user.getId(), dto.getRoleIds());
+        batchSaveRoleUser(user.getId(), roleIds);
         return user.getId();
     }
 
@@ -143,15 +146,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (user == null) {
             throw new BusinessException(String.format("获取不到ID为{%s}的记录", dto.getId()));
         }
+        Set<RoleIdNameDTO> roleList = dto.getRoleList();
         String rolenameString = "";
-        for(String rolename : dto.getRolenames()) {
-            rolenameString += rolename+",";
+        for(RoleIdNameDTO roleIdName : roleList) {
+            rolenameString += roleIdName.getName() + ",";
         }
         user.setRolename(rolenameString.substring(0, rolenameString.length()-1));
         BeanUtils.copyProperties(dto, user);
 
+        Set<Long> roleIds = roleList.stream().map(RoleIdNameDTO::getId).collect(toSet());
         //批量更新ROLE
-        batchUpdateRole(dto.getId(), dto.getRoleIds());
+        batchUpdateRole(dto.getId(), roleIds);
 
         //保存用户记录
         this.updateById(user);
@@ -159,7 +164,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         roleUserService.remove(new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getUserId, dto.getId()));
 
         //批量保存ROLEUSER
-        batchSaveRoleUser(user.getId(), dto.getRoleIds());
+        batchSaveRoleUser(user.getId(), roleIds);
         return true;
     }
 
