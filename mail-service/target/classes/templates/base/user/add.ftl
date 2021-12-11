@@ -42,28 +42,12 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">所属角色</label>
-        <div class="layui-input-inline">
-            <select name="quiz3">
-                <option value="">请选择县/区</option>
-                <option value="西湖区">西湖区</option>
-                <option value="余杭区">余杭区</option>
-                <option value="拱墅区">临安市</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-inline">
-        <label class="layui-form-label">所属角色</label>
-        <div class="layui-input-inline">
-            <select name="modules" lay-verify="required" lay-search="">
+        <div class="layui-input-block">
+            <select id="role" name="role" lay-verify="required">
                 <option value="">请选择</option>
-                <option value="1">layer</option>
-                <option value="2">form</option>
-                <option value="3">layim</option>
-                <option value="4">element</option>
             </select>
         </div>
     </div>
-</div>
     <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
