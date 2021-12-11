@@ -22,6 +22,8 @@ spring:
     expose-request-attributes: true
     expose-session-attributes: true
     suffix: .ftl
+    settings:
+      template_update_delay: 0
 
   redis:
     database: 0

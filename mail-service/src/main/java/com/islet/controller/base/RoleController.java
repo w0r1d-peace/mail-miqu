@@ -7,17 +7,12 @@ import com.islet.domain.dto.base.RoleSavaOrUpdateDTO;
 import com.islet.domain.vo.PageVO;
 import com.islet.domain.vo.bese.RoleFindAllVO;
 import com.islet.domain.vo.bese.RolePageVO;
-import com.islet.model.base.Role;
 import com.islet.service.base.IRoleService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,7 +75,7 @@ public class RoleController extends AbstractController {
      * 查询所有的角色
      * @return
      */
-    @PostMapping("findAll")
+    @GetMapping("findAll")
     @ResponseBody
     public Result<List<RoleFindAllVO>> findAll() {
         return Result.success(roleService.findAll());

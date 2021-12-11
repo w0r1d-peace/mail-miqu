@@ -55,7 +55,7 @@
           "child": [
             {
               "title": "用户管理",
-              "href": "../page/user/list",
+              "href": "../page/user",
               "icon": "fa fa-tachometer",
               "target": "_self"
             },

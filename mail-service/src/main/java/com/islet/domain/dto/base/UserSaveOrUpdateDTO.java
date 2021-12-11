@@ -16,14 +16,15 @@ import java.util.Set;
 public class UserSaveOrUpdateDTO extends BaseDTO {
 
     private Long id;
+    @NotBlank(message = "真实姓名不能为空")
+    private String name;
+    @NotBlank(message = "手机号码不能为空")
+    private String phone;
     @NotBlank(message = "用户名不能为空")
     private String username;
-    private String name;
-    private String phone;
     @NotBlank(message = "密码不能为空")
     private String password;
     @NotNull(message = "请至少选择一个所属角色")
     private Set<RoleIdNameDTO> roleList;
-    @NotBlank(message = "真实姓名不能为空")
     private String description;
 }
