@@ -42,16 +42,28 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">所属角色</label>
-        <div class="layui-input-block">
-            <select id="role" name="role">
-                <option value=""></option>
-                <option value="1">北京</option>
-                <option value="2">上海</option>
-                <option value="3">天津</option>
-                <option value="4">重庆</option>
+        <div class="layui-input-inline">
+            <select name="quiz3">
+                <option value="">请选择县/区</option>
+                <option value="西湖区">西湖区</option>
+                <option value="余杭区">余杭区</option>
+                <option value="拱墅区">临安市</option>
             </select>
         </div>
     </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">所属角色</label>
+        <div class="layui-input-inline">
+            <select name="modules" lay-verify="required" lay-search="">
+                <option value="">请选择</option>
+                <option value="1">layer</option>
+                <option value="2">form</option>
+                <option value="3">layim</option>
+                <option value="4">element</option>
+            </select>
+        </div>
+    </div>
+</div>
     <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
@@ -71,16 +83,15 @@
     $(document).ready(function(){
         $.ajax({
             url: contextPath + "/role/findAll",
-            data: JSON.stringify(data),
             type:"get",
             success:function(data){
-                let resultCode = data.resultCode;
-                let resultMsg = data.resultMsg;
+                let resultCode = data.code;
                 if (resultCode == 1000) {
-                    resultCode.data;
-                    $("#role").append("<option selected='selected' value='"+new_year+"'>"+new_year+"年</option>");
-                } else {
-                    layer.msg(resultMsg);
+                    let result = data.data;
+                    for(let i=0; i<result.length; i++){
+                        let resultElement = result[i];
+                        $("#role").append("<option value='"+resultElement.id+"'>"+resultElement.name+"</option>");
+                    }
                 }
             },
             error:function(data){
@@ -105,8 +116,8 @@
                 dataType:"json",
                 headers : {'Content-Type' : 'application/json;charset=utf-8'}, //接口json格式
                 success:function(data){
-                    let resultCode = data.resultCode;
-                    let resultMsg = data.resultMsg;
+                    let resultCode = data.code;
+                    let resultMsg = data.msg;
                     if (resultCode == 1000) {
                         location.href = contextPath + "/page/index";
                     } else {

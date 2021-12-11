@@ -43,12 +43,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">所属角色</label>
         <div class="layui-input-block">
-            <select id="role" name="role">
-                <option value=""></option>
-                <option value="1">北京</option>
-                <option value="2">上海</option>
-                <option value="3">天津</option>
-                <option value="4">重庆</option>
+            <select id="role" name="role" lay-verify="required">
+                <option value="">请选择</option>
             </select>
         </div>
     </div>
@@ -71,16 +67,15 @@
     $(document).ready(function(){
         $.ajax({
             url: contextPath + "/role/findAll",
-            data: JSON.stringify(data),
             type:"get",
             success:function(data){
-                let resultCode = data.resultCode;
-                let resultMsg = data.resultMsg;
+                let resultCode = data.code;
                 if (resultCode == 1000) {
-                    resultCode.data;
-                    $("#role").append("<option selected='selected' value='"+new_year+"'>"+new_year+"年</option>");
-                } else {
-                    layer.msg(resultMsg);
+                    let result = data.data;
+                    for(let i=0; i<result.length; i++){
+                        let resultElement = result[i];
+                        $("#role").append("<option value='"+resultElement.id+"'>"+resultElement.name+"</option>");
+                    }
                 }
             },
             error:function(data){
@@ -105,8 +100,8 @@
                 dataType:"json",
                 headers : {'Content-Type' : 'application/json;charset=utf-8'}, //接口json格式
                 success:function(data){
-                    let resultCode = data.resultCode;
-                    let resultMsg = data.resultMsg;
+                    let resultCode = data.code;
+                    let resultMsg = data.msg;
                     if (resultCode == 1000) {
                         location.href = contextPath + "/page/index";
                     } else {

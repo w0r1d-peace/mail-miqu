@@ -76,7 +76,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: 'http://localhost:8080/mail/user/page',
+            url: contextPath + '/user/page',
             toolbar: '#toolbarDemo',
             parseData: function(res) { //res 即为原始返回的数据
                 let resData = res.data;
