@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 /**
  * @author tangJM.
@@ -20,11 +19,9 @@ public class UserSaveOrUpdateDTO extends BaseDTO {
     private String name;
     @NotBlank(message = "手机号码不能为空")
     private String phone;
-    @NotBlank(message = "用户名不能为空")
     private String username;
-    @NotBlank(message = "密码不能为空")
     private String password;
-    @NotNull(message = "请至少选择一个所属角色")
-    private Set<RoleIdNameDTO> roleList;
+    @NotNull(message = "请选择一个所属角色")
+    private Long roleId;
     private String description;
 }

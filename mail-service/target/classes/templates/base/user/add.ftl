@@ -41,14 +41,6 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">所属角色</label>
-        <div class="layui-input-block">
-            <select id="role" name="role" lay-verify="required">
-                <option value="">请选择</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
         <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
             <textarea name="description" class="layui-input" type="text/plain" style="resize: none; height: 100px;"></textarea>
@@ -64,7 +56,7 @@
 <script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
-    $(document).ready(function(){
+    /*$(document).ready(function(){
         $.ajax({
             url: contextPath + "/role/findAll",
             type:"get",
@@ -74,7 +66,9 @@
                     let result = data.data;
                     for(let i=0; i<result.length; i++){
                         let resultElement = result[i];
-                        $("#role").append("<option value='"+resultElement.id+"'>"+resultElement.name+"</option>");
+                        $("#roleList").append("<option value='"+resultElement.id+"'>"+resultElement.name+"</option>");
+                        renderForm();//表单重新渲染，要不然添加完显示不出来新的option
+                        layer.close(i);
                     }
                 }
             },
@@ -85,11 +79,20 @@
         });
     });
 
+    function renderForm(){
+        layui.use('form', function(){
+            let form = layui.form;
+            form.render();
+        });
+    }*/
+
+
     layui.use(['form'], function () {
         let form = layui.form,
             layer = layui.layer,
             $ = layui.$;
 
+        let authorization = localStorage.getItem("authorization");
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             data = data.field;
@@ -98,12 +101,12 @@
                 data: JSON.stringify(data),
                 type:"post",
                 dataType:"json",
-                headers : {'Content-Type' : 'application/json;charset=utf-8'}, //接口json格式
+                headers : {'Content-Type' : 'application/json;charset=utf-8', 'Authorization': authorization}, //接口json格式
                 success:function(data){
                     let resultCode = data.code;
                     let resultMsg = data.msg;
-                    if (resultCode == 1000) {
-                        location.href = contextPath + "/page/index";
+                    if (resultCode == 0) {
+                        location.href = contextPath + "/page/user";
                     } else {
                         layer.msg(resultMsg);
                     }

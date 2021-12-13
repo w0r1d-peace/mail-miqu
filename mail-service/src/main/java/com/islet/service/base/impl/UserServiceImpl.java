@@ -6,20 +6,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.islet.common.util.RedisKeyUtil;
 import com.islet.common.web.ResultCode;
-import com.islet.domain.dto.base.RoleIdNameDTO;
 import com.islet.domain.dto.base.UserLoginDTO;
 import com.islet.domain.dto.base.UserPageDTO;
 import com.islet.domain.dto.base.UserSaveOrUpdateDTO;
 import com.islet.domain.vo.PageVO;
 import com.islet.domain.vo.bese.UserPageVO;
 import com.islet.exception.BusinessException;
-import com.islet.mapper.base.PermissionMapper;
 import com.islet.mapper.base.UserMapper;
-import com.islet.model.base.Role;
-import com.islet.model.base.RoleUser;
 import com.islet.model.base.User;
-import com.islet.service.base.IRoleService;
-import com.islet.service.base.IRoleUserService;
 import com.islet.service.base.IUserService;
 import com.islet.util.MD5Util;
 import com.islet.util.PageUtil;
@@ -32,8 +26,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.*;
 
-import static java.util.stream.Collectors.toSet;
-
 /**
  * <p>
  *  服务实现类
@@ -45,12 +37,6 @@ import static java.util.stream.Collectors.toSet;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-    @Resource
-    private IRoleService roleService;
-    @Resource
-    private IRoleUserService roleUserService;
-    @Resource
-    private PermissionMapper permissionMapper;
     @Resource
     private RedisService redisService;
 
@@ -68,30 +54,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         // 获取表单验证码
         checkCaptcha(dto.getCaptcha());
         // 验证用户名和密码
-        Long userId = checkUserInfo(dto.getUsername(), dto.getPassword(), token);
-        // 获取用户的权限,将用户权限保存在缓存中
-        saveUserPermission(userId);
+        checkUserInfo(dto.getUsername(), dto.getPassword(), token);
     }
 
     @Override
     public PageVO<UserPageVO> userPage(UserPageDTO dto) {
-        Set<Long> userIds = new HashSet<>();
-        if (dto.getRoleId() != null) {
-            List<RoleUser> roleUsersList = roleUserService.list(
-                    new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getRoleId, dto.getRoleId()));
-            roleUsersList.forEach(roleUser -> {
-                userIds.add(roleUser.getUserId());
-            });
-        }
-
         // 组装条件
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper<User>()
                 .lambda()
-                .in(dto.getRoleId() != null, User::getId, userIds)
                 .like(StringUtils.isNotEmpty(dto.getUsername()), User::getUsername, dto.getUsername())
                 .like(StringUtils.isNotEmpty(dto.getName()), User::getName, dto.getName())
                 .like(StringUtils.isNotEmpty(dto.getPhone()), User::getPhone, dto.getPhone())
-                .ne(User::getUserId, 0L);
+                .eq(User::getUserId, dto.getUserId());
 
         return PageUtil.getPageVOByIPage(page -> (IPage<User>) super.page(page
                 , queryWrapper)
@@ -115,22 +89,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setCreateTime(new Date());
         user.setModified(new Date());
         user.setRemoved(false);
-        String rolenameString = "";
-        Set<RoleIdNameDTO> roleList = dto.getRoleList();
-        for (RoleIdNameDTO roleIdName : roleList) {
-            rolenameString += roleIdName.getName() + ",";
-        }
-        user.setRolename(rolenameString.substring(0, rolenameString.length()-1));
         user.setUserId(dto.getUserId());
         user.setCreator(dto.getCreator());
         //保存用户记录
         this.save(user);
-
-        Set<Long> roleIds = roleList.stream().map(RoleIdNameDTO::getId).collect(toSet());
-        //批量更新ROLE
-        batchUpdateRole(null, roleIds);
-        //批量保存ROLEUSER
-        batchSaveRoleUser(user.getId(), roleIds);
         return user.getId();
     }
 
@@ -146,102 +108,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (user == null) {
             throw new BusinessException(String.format("获取不到ID为{%s}的记录", dto.getId()));
         }
-        Set<RoleIdNameDTO> roleList = dto.getRoleList();
-        String rolenameString = "";
-        for(RoleIdNameDTO roleIdName : roleList) {
-            rolenameString += roleIdName.getName() + ",";
-        }
-        user.setRolename(rolenameString.substring(0, rolenameString.length()-1));
-        BeanUtils.copyProperties(dto, user);
-
-        Set<Long> roleIds = roleList.stream().map(RoleIdNameDTO::getId).collect(toSet());
-        //批量更新ROLE
-        batchUpdateRole(dto.getId(), roleIds);
-
+        user.setName(dto.getName());
+        user.setPhone(dto.getPhone());
+        user.setDescription(dto.getDescription());
+        user.setModified(new Date());
         //保存用户记录
-        this.updateById(user);
-        //把所属角色删除，重新添加记录
-        roleUserService.remove(new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getUserId, dto.getId()));
-
-        //批量保存ROLEUSER
-        batchSaveRoleUser(user.getId(), roleIds);
-        return true;
+        return this.updateById(user);
     }
 
     @Override
     public Boolean deleteUser(List<Long> ids, Long userId, String createName) {
-        //批量更新角色中用户数量
-        batchUpdateRole(ids);
-        //删除
-        this.removeByIds(ids);
-        //删除关联数据
-        roleUserService.remove(new LambdaQueryWrapper<RoleUser>().in(RoleUser::getUserId, ids));
-        return true;
-    }
-
-    /**
-     * 批量更新ROLE
-     * @param userId
-     * @param roleIds
-     * @throws Exception
-     */
-    public void batchUpdateRole(Long userId, Set<Long> roleIds) {
-        List<Role> roleList = new ArrayList<>();
-        if (userId == null) {
-            roleIds.forEach(roleId -> {
-                Role role = roleService.getById(roleId);
-                role.setUserNumber(role.getUserNumber() + 1);
-                roleList.add(role);
-            });
-        } else {
-            Set<Long> plusSet;
-            Set<Long> minusSet;
-            Set<Long> userRoleIds = new HashSet<>();
-            List<RoleUser> roleUserList = roleUserService.list(
-                    new LambdaQueryWrapper<RoleUser>().eq(RoleUser::getUserId, userId));
-            roleUserList.forEach(roleUser -> {
-                userRoleIds.add(roleUser.getRoleId());
-            });
-            //取差集 roleIds - userRoleIds
-            plusSet = roleIds.stream().filter(item -> !userRoleIds.contains(item)).collect(toSet());
-            //用户数量加1
-            plusSet.forEach(roleId -> {
-                Role role = roleService.getById(roleId);
-                role.setUserNumber(role.getUserNumber() + 1);
-                roleList.add(role);
-            });
-            //取差集 userRoleIds - roleIds
-            minusSet = userRoleIds.stream().filter(item -> !roleIds.contains(item)).collect(toSet());
-            //用户数量减1
-            minusSet.forEach(roleId -> {
-                Role role = roleService.getById(roleId);
-                role.setUserNumber(role.getUserNumber() - 1);
-                roleList.add(role);
-            });
-        }
-        if (!roleList.isEmpty()) {
-            //批量更新ROLE
-            roleService.updateBatchById(roleList);
-        }
-    }
-
-    /**
-     * 批量保存ROLEUSER
-     * @param userId
-     * @param roleIds
-     * @return
-     * @throws Exception
-     */
-    private void batchSaveRoleUser(Long userId, Set<Long> roleIds) {
-        List<RoleUser> roleUserList = new ArrayList<>();
-        roleIds.forEach(roleId -> {
-            //封装对象
-            RoleUser roleUser = new RoleUser();
-            roleUser.setUserId(userId);
-            roleUser.setRoleId(roleId);
-            roleUserList.add(roleUser);
-        });
-        roleUserService.saveBatch(roleUserList);
+        return this.removeByIds(ids);
     }
 
     /**
@@ -305,66 +182,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         return user.getId();
     }
-
-    /**
-     * 查询用户权限，并将用户权限中url保存到redis
-     * @param userId
-     * @throws Exception
-     */
-    private void saveUserPermission(Long userId) {
-        // 获取到权限的url
-        Set<String> permissionUrls = permissionMapper.getPermissionUrls(userId);
-        StringBuffer urls = new StringBuffer();
-        permissionUrls.forEach(url -> {
-            urls.append(url).append(",");
-        });
-
-        // 保存用户权限到redis
-        boolean isSuccess = redisService.set(RedisKeyUtil.USER_PERMISSION_URLS + userId, StringUtils.isNotBlank(urls) ? urls.substring(0, urls.length() - 1) : "");
-        if (!isSuccess) {
-            log.error("保存用户到redis异常");
-            throw new RuntimeException();
-        }
-    }
-
-    /**
-     * 批量更新ROLE
-     * @param userIds
-     * @throws Exception
-     */
-    public void batchUpdateRole(List<Long> userIds) {
-        List<Role> roleList = new ArrayList<>();
-        List<RoleUser> roleUserList = roleUserService.list(
-                new LambdaQueryWrapper<RoleUser>().in(RoleUser::getUserId, userIds));
-        List<Long> roleIdList = new ArrayList<>();
-
-        roleUserList.forEach(roleUser -> {
-            roleIdList.add(roleUser.getRoleId());
-        });
-        if (!roleIdList.isEmpty()) {
-            //获取list中元素出现的个数
-            Map<Long, Integer> map = frequencyOfListElements(roleIdList);
-            map.forEach((k, v) -> {
-                Role role = roleService.getById(k);
-                role.setUserNumber(role.getUserNumber() - v);
-                roleList.add(role);
-            });
-            //批量更新ROLE
-            roleService.updateBatchById(roleList);
-        }
-    }
-
-    /**
-     * 统计list中每个元素出现的次数
-     */
-    public Map<Long,Integer> frequencyOfListElements(List<Long> items) {
-        if (items == null || items.size() == 0) return null;
-        Map<Long, Integer> map = new HashMap<>();
-        for (Long temp : items) {
-            Integer count = map.get(temp);
-            map.put(temp, (count == null) ? 1 : count + 1);
-        }
-        return map;
-    }
-
 }

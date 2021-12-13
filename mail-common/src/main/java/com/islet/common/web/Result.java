@@ -57,8 +57,8 @@ public class Result<T> {
         return of(code, msg, null);
     }
 
-    public static <T> Result<T> of(int resultCode, String msg, T data) {
-        return new Result(resultCode, msg, data);
+    public static <T> Result<T> of(int code, String msg, T data) {
+        return new Result(code, msg, data);
     }
 
     public static <T> Result<T> success(T data) {

@@ -13,5 +13,4 @@ public class UserPageDTO extends PageDTO {
     private String username;
     private String name;
     private String phone;
-    private Long roleId;
 }

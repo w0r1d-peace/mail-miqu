@@ -7,6 +7,7 @@ import com.islet.domain.vo.PageVO;
 import com.islet.domain.vo.bese.UserPageVO;
 import com.islet.service.base.IUserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,6 +23,7 @@ import java.util.List;
  * @since 2021-09-18
  */
 @Controller
+@Validated
 @RequestMapping("/user")
 public class UserController extends AbstractController {
 

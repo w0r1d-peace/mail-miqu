@@ -6,7 +6,7 @@ package com.islet.common.web;
  * @description
  */
 public class ResultCode {
-    public static final Integer SUCCESS = 1000;
+    public static final Integer SUCCESS = 0;
     public static final Integer FAIL = 1001;
     public static final Integer PARAMETER_FAIL = 1002;
     public static final Integer NOT_LOGIN = 1003;

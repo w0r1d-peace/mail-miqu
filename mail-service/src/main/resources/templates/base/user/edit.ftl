@@ -17,17 +17,10 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">用户名</label>
+        <input type="hidden" name="id" />
+        <label class="layui-form-label required">姓名</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input">
-            <tip>填写自己管理账号的名称。</tip>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">性别</label>
-        <div class="layui-input-block">
-            <input type="radio" name="sex" value="男" title="男" checked="">
-            <input type="radio" name="sex" value="女" title="女">
+            <input type="text" name="name" lay-verify="required" lay-reqtext="姓名不能为空" placeholder="请输入姓名" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -37,21 +30,9 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">邮箱</label>
+        <label class="layui-form-label">描述</label>
         <div class="layui-input-block">
-            <input type="email" name="email" placeholder="请输入邮箱" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">职业</label>
-        <div class="layui-input-block">
-            <input type="text" name="work" placeholder="请输入职业" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">备注信息</label>
-        <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+            <textarea name="description" class="layui-input" type="text/plain" style="resize: none; height: 100px;"></textarea>
         </div>
     </div>
 
@@ -62,25 +43,43 @@
     </div>
 </div>
 </div>
+<script src="../../common/common.js"></script>
+<script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
+    $(document).ready(function(){
+        let result = window.parent.data;
+        console.log(result);
+    });
+
     layui.use(['form'], function () {
-        var form = layui.form,
+        let form = layui.form,
             layer = layui.layer,
             $ = layui.$;
 
+        let authorization = localStorage.getItem("authorization");
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var index = layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            }, function () {
-
-                // 关闭弹出层
-                layer.close(index);
-
-                var iframeIndex = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(iframeIndex);
-
+            data = data.field;
+            $.ajax({
+                url: contextPath + "/user/edit",
+                data: JSON.stringify(data),
+                type:"post",
+                dataType:"json",
+                headers : {'Content-Type' : 'application/json;charset=utf-8', 'Authorization': authorization}, //接口json格式
+                success:function(data){
+                    let resultCode = data.code;
+                    let resultMsg = data.msg;
+                    if (resultCode == 0) {
+                        location.href = contextPath + "/page/user";
+                    } else {
+                        layer.msg(resultMsg);
+                    }
+                },
+                error:function(data){
+                    console.log(data);
+                    layer.msg('操作失败');
+                }
             });
 
             return false;

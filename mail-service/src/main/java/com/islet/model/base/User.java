@@ -50,11 +50,6 @@ public class User implements Serializable {
     private String phone;
 
     /**
-     * 角色名称（可多个，逗号分隔）
-     */
-    private String rolename;
-
-    /**
      * 备注
      */
     private String description;

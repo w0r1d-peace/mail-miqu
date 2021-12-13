@@ -1,5 +1,6 @@
 package com.islet.domain.vo.bese;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.util.Date;
 
@@ -32,11 +33,6 @@ public class UserPageVO {
     private String phone;
 
     /**
-     * 角色名称
-     */
-    private String rolename;
-
-    /**
      * 描述
      */
     private String description;
@@ -44,6 +40,7 @@ public class UserPageVO {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd mm:HH:ss",timezone = "GMT+8")
     private Date createTime;
 
     /**

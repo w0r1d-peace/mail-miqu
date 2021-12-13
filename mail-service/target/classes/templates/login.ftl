@@ -91,10 +91,13 @@
                 type:"post",
                 dataType:"json",
                 headers : {'Content-Type' : 'application/json;charset=utf-8'}, //接口json格式
-                success:function(data){
-                    let resultCode = data.resultCode;
-                    let resultMsg = data.resultMsg;
-                    if (resultCode == 1000) {
+                success: function (data, status, xhr) {
+                    let resultCode = data.code;
+                    let resultMsg = data.msg;
+                    if (resultCode == 0) {
+                        // 缓存Authorization
+                        let authorization = xhr.getResponseHeader('Authorization');
+                        localStorage.setItem("authorization", authorization);
                         location.href = contextPath + "/page/index";
                     } else {
                         layer.msg(resultMsg);

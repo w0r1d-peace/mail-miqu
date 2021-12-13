@@ -19,27 +19,15 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">用户名</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="username" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
+                            <label class="layui-form-label">手机号码</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户城市</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
+                                <input type="text" name="phone" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -74,14 +62,16 @@
             form = layui.form,
             table = layui.table;
 
+        let authorization = localStorage.getItem("authorization");
         table.render({
             elem: '#currentTableId',
-            url: 'http://localhost:8080/mail/user/page',
+            url: contextPath + '/user/page',
             toolbar: '#toolbarDemo',
+            headers : {'Authorization' : authorization},
             parseData: function(res) { //res 即为原始返回的数据
                 let resData = res.data;
                 return {
-                    "code": res.code,
+                    "code": 0,
                     "msg": res.msg,
                     "count": resData.totalCount,//解析数据总条数
                     "data": resData.list //解析数据列表
@@ -89,11 +79,10 @@
             },
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'username', width: 120, title: '用户名'},
-                {field: 'name', width: 120, title: '名称', sort: true},
+                {field: 'username', width: 150, title: '用户名'},
+                {field: 'name', width: 120, title: '姓名', sort: true},
                 {field: 'phone', width: 150, title: '手机号码'},
-                {field: 'rolename', title: '角色名称', minWidth: 150},
-                {field: 'createTime', width: 150, title: '创建时间', sort: true},
+                {field: 'createTime', width: 200, title: '创建时间', sort: true},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
@@ -104,18 +93,17 @@
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            let result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
-
+            let result = data.field;
+            let username = result.username;
+            let phone = result.phone;
             //执行搜索重载
             table.reload('currentTableId', {
                 page: {
                     curr: 1
                 }
                 , where: {
-                    searchParams: result
+                    username: username,
+                    phone: phone
                 }
             }, 'data');
 
@@ -155,7 +143,6 @@
         table.on('tool(currentTableFilter)', function (obj) {
             let data = obj.data;
             if (obj.event === 'edit') {
-
                 let index = layer.open({
                     title: '编辑用户',
                     type: 2,
@@ -163,7 +150,22 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: '../page/table/edit.html',
+                    content: contextPath + '/page/user/edit',
+                    success: function (layero, index) {
+                        let body = layui.layer.getChildFrame('body', index);
+                        console.log(data);
+                        body.find("input[name='id']").val(data.id);
+                        body.find("input[name='name']").val(data.name);
+                        body.find("input[name='phone']").val(data.phone);
+                        body.find("input[name='username']").val(data.username);
+                        body.find("input[name='description']").val(data.description);
+                        form.render();
+                        setTimeout(function () {
+                            layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
+                                tips: 3
+                            });
+                        }, 500)
+                    }
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
