@@ -1,6 +1,7 @@
 package com.islet.controller.base;
 import com.islet.common.web.Result;
 import com.islet.controller.AbstractController;
+import com.islet.domain.dto.base.UserDeleteDTO;
 import com.islet.domain.dto.base.UserPageDTO;
 import com.islet.domain.dto.base.UserSaveOrUpdateDTO;
 import com.islet.domain.vo.PageVO;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -67,7 +69,7 @@ public class UserController extends AbstractController {
      */
     @PostMapping("/delete")
     @ResponseBody
-    public Result<Boolean> delete(@RequestBody @Valid List<Long> ids) {
-        return Result.success(userService.deleteUser(ids, super.getUserId(), super.getCreateName()));
+    public Result<Boolean> delete(@RequestBody @Valid UserDeleteDTO dto) {
+        return Result.success(userService.deleteUser(dto.getIds(), dto.getUserId(), dto.getCreator()));
     }
 }

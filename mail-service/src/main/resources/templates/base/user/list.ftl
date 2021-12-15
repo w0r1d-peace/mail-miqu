@@ -55,6 +55,7 @@
     </div>
 </div>
 <script src="../common/common.js"></script>
+<script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
     layui.use(['form', 'table'], function () {
@@ -131,13 +132,26 @@
             } else if (obj.event === 'delete') {  // 监听删除操作
                 let checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+                let count = 0;
+                let ids = new Array() ;
+                for (let i in data) {
+                    let obj = data[i];
+                    ids[i] = obj.id;
+                    ++count;
+                }
+                if (count == 0) {
+                    layer.alert("请选择要删除的数据");
+                }
+
+                let result = JSON.parse('{"ids":['+ids+']}');
+                ajaxPostAsyncData(contextPath + '/user/delete', result, function(d){
+                });
             }
         });
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
+
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
@@ -153,12 +167,10 @@
                     content: contextPath + '/page/user/edit',
                     success: function (layero, index) {
                         let body = layui.layer.getChildFrame('body', index);
-                        console.log(data);
                         body.find("input[name='id']").val(data.id);
                         body.find("input[name='name']").val(data.name);
                         body.find("input[name='phone']").val(data.phone);
-                        body.find("input[name='username']").val(data.username);
-                        body.find("input[name='description']").val(data.description);
+                        body.find("textarea[name='description']").val(data.description);
                         form.render();
                         setTimeout(function () {
                             layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
@@ -172,9 +184,13 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
+                layer.confirm('您确定要删除该用户吗？', function (index) {
                     obj.del();
                     layer.close(index);
+                });
+                let result = JSON.parse('{"ids":['+data.id+']}');
+                ajaxPostAsyncData(contextPath + '/user/delete', result, function(d){
+
                 });
             }
         });

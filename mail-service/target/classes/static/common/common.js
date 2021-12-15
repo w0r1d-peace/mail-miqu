@@ -33,12 +33,14 @@ function ajaxPost(url, data, successfn) {
     data = (data == null || data == "" || typeof (data) == "undefined") ? {
         "date" : new Date().getTime()
     } : data;
+    let authorization = localStorage.getItem("authorization");
     $.ajax( {
         type : "post",
         data : data,
         url : url,
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
+        headers : {'Authorization' : authorization},
         beforeSend : function(XMLHttpRequest) {
             jzts();
         },
@@ -67,12 +69,14 @@ function ajaxWeb(url, data, successfn) {
     data = (data == null || data == "" || typeof (data) == "undefined") ? {
         "date" : new Date().getTime()
     } : data;
+    let authorization = localStorage.getItem("authorization");
     $.ajax( {
         type : "post",
         data : data,
         url : url,
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
+        headers : {'Authorization' : authorization},
         beforeSend : function(XMLHttpRequest) {
         },
         success : function(d) {
@@ -99,19 +103,21 @@ function ajaxPostAsyncData(url, data, successfn) {
     data = (data == null || data == "" || typeof (data) == "undefined") ? {
         "date" : new Date().getTime()
     } : data;
+    let authorization = localStorage.getItem("authorization");
     $.ajax( {
         type : "post",
-        data : data,
+        data : JSON.stringify(data),
         async: false,
         url : url,
         dataType : "json",
         contentType : "application/json;charset=UTF-8",
+        headers : {'Authorization' : authorization},
         beforeSend : function(XMLHttpRequest) {
         },
         success : function(d) {
-            if (d.code == "40002") {
+            /*if (d.code == "0") {
                 return;
-            }
+            }*/
             successfn(d);
         },
         complete : function(XMLHttpRequest, textStatus) {

@@ -65,7 +65,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .like(StringUtils.isNotEmpty(dto.getUsername()), User::getUsername, dto.getUsername())
                 .like(StringUtils.isNotEmpty(dto.getName()), User::getName, dto.getName())
                 .like(StringUtils.isNotEmpty(dto.getPhone()), User::getPhone, dto.getPhone())
-                .eq(User::getUserId, dto.getUserId());
+                .eq(User::getUserId, dto.getUserId())
+                .orderByDesc(User::getCreateTime);
 
         return PageUtil.getPageVOByIPage(page -> (IPage<User>) super.page(page
                 , queryWrapper)
