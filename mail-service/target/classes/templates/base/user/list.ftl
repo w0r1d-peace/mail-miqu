@@ -151,7 +151,7 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
+
         });
 
         table.on('tool(currentTableFilter)', function (obj) {

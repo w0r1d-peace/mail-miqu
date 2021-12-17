@@ -49,7 +49,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         // 判断邮箱是否已录入
         int count = super.count(new LambdaQueryWrapper<Task>()
                 .eq(Task::getEmail, dto.getEmail())
-              //  .eq(Task::getCreateId, dto.getUserId())
+                .eq(Task::getCreateId, dto.getUserId())
                 .eq(Task::getRemoved, false)
         );
         if (count > 0) {
@@ -66,11 +66,11 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         Date now = new Date();
         Task task = new Task();
         BeanUtils.copyProperties(dto, task);
-        /*task.setCreateId(dto.getUserId());
-        task.setCreateName(dto.getCreator());*/
+        task.setCreateId(dto.getUserId());
+        task.setCreateName(dto.getCreator());
         task.setCreateTime(now);
-        /*task.setUpdateId(dto.getUserId());
-        task.setUpdateName(dto.getCreator());*/
+        task.setUpdateId(dto.getUserId());
+        task.setUpdateName(dto.getCreator());
         task.setUpdateTime(now);
         task.setRemoved(Boolean.FALSE);
         task.setConnStatus(ConnStatusEnum.CONN_NORMAL.getConnStatus());
@@ -85,7 +85,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
     @Override
     public Boolean updateTask(TaskSaveOrUpdateDTO dto) {
         // 判断邮箱是否已录入
-       /* int count = super.count(new LambdaQueryWrapper<Task>()
+        int count = super.count(new LambdaQueryWrapper<Task>()
                 .ne(Task::getId, dto.getUserId())
                 .eq(Task::getEmail, dto.getEmail())
                 .eq(Task::getCreateId, dto.getUserId())
@@ -93,7 +93,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         );
         if (count > 0) {
             throw new BusinessException(String.format("邮箱%s已录入,请勿重复添加", dto.getEmail()));
-        }*/
+        }
 
         // 连接测试
         MailConnCfg mailConnCfg = new MailConnCfg();
@@ -104,8 +104,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
         Task task = getById(dto.getId());
         BeanUtils.copyProperties(dto, task);
-/*        task.setUpdateId(dto.getUserId());
-        task.setUpdateName(dto.getCreator());*/
+        task.setUpdateId(dto.getUserId());
+        task.setUpdateName(dto.getCreator());
         task.setUpdateTime(new Date());
         return super.updateById(task);
     }
