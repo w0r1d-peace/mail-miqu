@@ -14,6 +14,7 @@ import com.islet.service.mail.ITaskService;
 import com.islet.service.mail.handler.server.*;
 import com.islet.support.elasticsearch.domain.EmailEs;
 import com.islet.support.elasticsearch.service.IEmailTransClientService;
+import com.islet.support.websocket.PullMessage;
 import com.islet.util.CachedBeanCopierUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +41,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
     @Resource
     private IEmailTransClientService emailTransClientService;
+    @Resource
+    private PullMessage pullMessage;
 
     @Value("${email.storage.path}")
     private String emailStoragePath;
@@ -111,7 +114,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
     }
 
     @Override
-    public void pullEmail(List<Long> ids) {
+    public void pullEmail(List<Long> ids, Long userId, String createName) {
         List<Task> taskList = super.list(new LambdaQueryWrapper<Task>().in(Task::getId, ids));
         if (taskList != null) {
             taskList.stream().forEach(task -> {
@@ -126,6 +129,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
                         EmailEs emailEs = new EmailEs();
                         BeanUtils.copyProperties(universalMail, emailEs);
                         emailTransClientService.saveEmail(emailEs);
+                        pullMessage.sendMessage(userId, emailEs.getTitle());
                     }
                 } catch (MailPlusException e) {
                     e.printStackTrace();

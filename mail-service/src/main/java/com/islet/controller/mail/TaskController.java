@@ -55,7 +55,7 @@ public class TaskController extends AbstractController {
     @GetMapping("/pull_email")
     @ResponseBody
     public void pullEmail(@RequestParam @Valid List<Long> ids) {
-        taskService.pullEmail(ids);
+        taskService.pullEmail(ids, super.getUserId(), super.getCreateName());
     }
 
     /**

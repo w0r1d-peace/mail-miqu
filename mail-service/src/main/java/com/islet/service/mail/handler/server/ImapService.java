@@ -92,66 +92,57 @@ public class ImapService implements IMailService {
 
         ExecutorService executor = Executors.newFixedThreadPool(5, new DefaultThreadFactory("imap-pull-"));
         AtomicInteger indexAi = new AtomicInteger(messages.length);
-        System.out.println(Thread.currentThread().getName() + "  ----   indexAi.get() = " + indexAi.get());
         AtomicInteger numAi = new AtomicInteger(0);
         Integer finalFiveDaysBefore = fiveDaysBefore;
         while (true) {
             if (indexAi.get() == 0) break;
 
-            executor.execute(new Runnable(){
-                @Override
-                public void run() {
-                    try {
-                        int i = indexAi.decrementAndGet();
-                        if (i < 0) {
-                            System.out.println("11111111111111111111111111111111111111111");
-                            executor.shutdown();
-                            return;
-                        }
-                        int num = numAi.get();
-                        boolean b = false;
-                    /*// 跟临时表中所存在的uid进行匹配
+            executor.execute(() -> {
+                try {
+                    int i = indexAi.decrementAndGet();
+                    if (i < 0) {
+                        executor.shutdown();
+                        return;
+                    }
+                    int num = numAi.get();
+                    boolean b = false;
+                    // 跟临时表中所存在的uid进行匹配
                     if (existUids != null && !existUids.isEmpty()) {
-                        String uid = String.valueOf(imapFolder.getFullName() + imapFolder.getUID(messages[i]));
+                        String uid = imapFolder.getFullName() + imapFolder.getUID(messages[i]);
                         if (existUids.contains(uid) && i == indexAi.get()) {
                             executor.shutdown();
                             return;
                         }
-                    }*/
-                        System.out.println(Thread.currentThread().getName() + "   finalI = "  + i);
-                       // Message message = messages[i];
-                        IMAPMessage message = (IMAPMessage)messages[i];
-                        Date receivedDate = message.getSentDate();
-                        System.out.println("receivedDate = " + receivedDate);
-                        if (receivedDate == null) return;
+                    }
+                    // Message message = messages[i];
+                    IMAPMessage message = (IMAPMessage)messages[i];
+                    Date receivedDate = message.getSentDate();
+                    if (receivedDate == null) return;
 
-                        String receivedDateFormat = sdf.format(receivedDate);
+                    String receivedDateFormat = sdf.format(receivedDate);
 
-                        // 该条件主要是判断邮件列表它的时间不会存在一直有序的，所以有可能前一天会排在今天前面，所以这里我直接获取到前五天的时间。
-                        // 其次就是避免在去获取时间太久前的邮件
-                        if (finalFiveDaysBefore > Integer.parseInt(receivedDateFormat)) {
+                    // 该条件主要是判断邮件列表它的时间不会存在一直有序的，所以有可能前一天会排在今天前面，所以这里我直接获取到前五天的时间。
+                    // 其次就是避免在去获取时间太久前的邮件
+                    if (finalFiveDaysBefore > Integer.parseInt(receivedDateFormat)) {
+                        executor.shutdown();
+                        return;
+                    }
+
+                    // 比较是否是当天的时间
+                    if (dateFormat.equals(receivedDateFormat)) {
+                        if (!b) b = true;
+                        mList.add(MailItem.builder().imapMessage((IMAPMessage) messages[i]).build());
+                    } else {
+                        if (num > 30) {
                             executor.shutdown();
                             return;
                         }
-
-                        // 比较是否是当天的时间
-                        if (dateFormat.equals(receivedDateFormat)) {
-                            if (!b) b = true;
-                            System.out.println("-------------------------------------------------");
-                            mList.add(MailItem.builder().imapMessage((IMAPMessage) messages[i]).build());
-                        } else {
-                            if (num > 30) {
-                                System.out.println("222222222222222222222222222222");
-                                executor.shutdown();
-                                return;
-                            }
-                            if (b) numAi.incrementAndGet();
-                        }
-                    } catch (Exception e) {
-                        log.error("imap - 获取邮件异常，异常原因：" +
-                                "\t" + e.getMessage());
-                        e.printStackTrace();
+                        if (b) numAi.incrementAndGet();
                     }
+                } catch (Exception e) {
+                    log.error("imap - 获取邮件异常，异常原因：" +
+                            "\t" + e.getMessage());
+                    e.printStackTrace();
                 }
             });
         }
@@ -166,7 +157,6 @@ public class ImapService implements IMailService {
                 e.printStackTrace();
             }
         }
-        System.out.println("mList = " + mList);
         return flag;
     }
 

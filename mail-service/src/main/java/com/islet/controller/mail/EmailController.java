@@ -28,6 +28,7 @@ public class EmailController extends AbstractController {
     @ResponseBody
     public void getMailContent(Long uid) {
         emailTransClientService.getMailContent(uid);
-
     }
+
+
 }

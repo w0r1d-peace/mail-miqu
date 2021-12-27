@@ -74,6 +74,10 @@ public class MailItemParser {
             String subject = mimeMessage.getSubject();
             subject = StringUtils.isEmpty(subject) ? "无主题" + System.currentTimeMillis() : subject;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (mimeMessage.getSentDate() == null) {
+                return null;
+            }
+
             String sendDate = sdf.format(mimeMessage.getSentDate());
             // 过滤主题中特殊的字符
             subject = filterSpecialStrings(subject);

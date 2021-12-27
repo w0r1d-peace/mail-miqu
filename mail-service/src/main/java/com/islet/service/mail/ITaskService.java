@@ -32,7 +32,7 @@ public interface ITaskService {
      * @param ids
      * @return
      */
-    void pullEmail(List<Long> ids);
+    void pullEmail(List<Long> ids, Long userId, String createName);
 
     /**
      * 删除任务
