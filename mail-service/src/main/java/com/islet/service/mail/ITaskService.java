@@ -1,4 +1,5 @@
 package com.islet.service.mail;
+import com.islet.domain.dto.mail.ExportDTO;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
 import com.islet.domain.vo.mail.TaskListVO;
 
@@ -66,5 +67,12 @@ public interface ITaskService {
      * @return
      */
     List<TaskListVO> list(String email, Long userId);
+
+    /**
+     * 导出
+     * @param dto
+     * @return
+     */
+    Boolean export(ExportDTO dto);
 }
 

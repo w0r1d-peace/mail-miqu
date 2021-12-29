@@ -2,6 +2,7 @@ package com.islet.controller.mail;
 
 import com.islet.common.web.Result;
 import com.islet.controller.AbstractController;
+import com.islet.domain.dto.mail.ExportDTO;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
 import com.islet.domain.vo.mail.TaskListVO;
 import com.islet.service.mail.ITaskService;
@@ -95,4 +96,15 @@ public class TaskController extends AbstractController {
     public Result<List<TaskListVO>> list(String email) {
         return Result.success(taskService.list(email, super.getUserId()));
     }
+
+    /**
+     * 导出
+     * @return
+     */
+    @PostMapping("export")
+    @ResponseBody
+    public Result<Boolean> export(@RequestBody @Valid ExportDTO dto) {
+        return Result.success(taskService.export(dto));
+    }
+
 }

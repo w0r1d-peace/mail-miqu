@@ -2,6 +2,7 @@ package com.islet.service.mail.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.islet.domain.dto.mail.ExportDTO;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
 import com.islet.domain.vo.mail.TaskListVO;
 import com.islet.enums.ConnStatusEnum;
@@ -176,8 +177,14 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
     @Override
     public List<TaskListVO> list(String email, Long userId) {
-        List<Task> list = super.list(new LambdaQueryWrapper<Task>().eq(Task::getRemoved, false).eq(StringUtils.isNotBlank(email), Task::getEmail, email));
+        List<Task> list = super.list(new LambdaQueryWrapper<Task>().eq(Task::getRemoved, false).eq(StringUtils.isNotBlank(email), Task::getEmail, email).eq(Task::getUpdateId, userId));
         return CachedBeanCopierUtil.copyList(list, TaskListVO.class);
+    }
+
+    @Override
+    public Boolean export(ExportDTO dto) {
+
+        return null;
     }
 
     /**
