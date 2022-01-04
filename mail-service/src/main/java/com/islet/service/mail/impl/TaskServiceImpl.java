@@ -183,8 +183,24 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
     @Override
     public Boolean export(ExportDTO dto) {
-
-        return null;
+        List<Task> taskList = super.list(new LambdaQueryWrapper<Task>().in(Task::getId, dto.getIds()));
+        if (taskList != null) {
+            taskList.stream().forEach(task -> {
+                MailConnCfg mailConnCfg = new MailConnCfg();
+                BeanUtils.copyProperties(task, mailConnCfg);
+                IMailService mailService = getMailService(task.getType());
+                MailConn mailConn = getMailConn(mailConnCfg, mailService);
+                try {
+                    List<MailItem> mailItems = mailService.listAll(mailConn, "", null);
+                    for (MailItem mailItem : mailItems) {
+                        UniversalMail universalMail = mailService.parseEmail(mailItem, emailStoragePath);
+                    }
+                } catch (MailPlusException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+        return true;
     }
 
     /**

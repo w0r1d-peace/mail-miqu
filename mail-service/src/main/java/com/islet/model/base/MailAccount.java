@@ -1,9 +1,6 @@
-package com.islet.model.mail;
+package com.islet.model.base;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.Version;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -17,63 +14,49 @@ import java.util.Date;
  * </p>
  *
  * @author tangJM.
- * @since 2021-10-12
+ * @since 2022-01-04
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class Trojan implements Serializable {
+@TableName("base_mail_account")
+public class MailAccount implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 木马邮件ID
+     * 系统账号ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 发件账号ID
+     * 邮箱账号
      */
-    private Long accountId;
+    private String account;
 
     /**
-     * 发件人
+     * 邮箱密码
      */
-    private String source;
+    private String password;
 
     /**
-     * 收件人
+     * 邮箱服务器
      */
-    private String target;
+    private String server;
 
     /**
-     * 是否开启仿冒邮箱
+     * STMP服务器地址
      */
-    private Boolean mailCounterfeitFlag;
+    private String host;
 
     /**
-     * 仿冒名
+     * STMP服务器端口
      */
-    private String mailCounterfeitName;
+    private Integer port;
 
     /**
-     * 仿冒邮箱
-     */
-    private String mailCounterfeitEmail;
-
-    /**
-     * 标题
-     */
-    private String title;
-
-    /**
-     * 安全链路
-     */
-    private Long vpnId;
-
-    /**
-     * 发送状态 1-发送中 2-发送成功 3-发送失败
+     * 账号状态 0-不可用 1-可用
      */
     private Boolean status;
 

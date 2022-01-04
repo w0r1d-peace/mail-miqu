@@ -5,6 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.islet.model.mail.TrojanDetail">
         <id column="id" property="id" />
+        <result column="trojan_id" property="trojanId" />
         <result column="content" property="content" />
         <result column="attachment" property="attachment" />
     </resultMap>

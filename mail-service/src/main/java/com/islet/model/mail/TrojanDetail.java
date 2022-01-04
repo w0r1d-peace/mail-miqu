@@ -30,6 +30,11 @@ public class TrojanDetail implements Serializable {
     private Long id;
 
     /**
+     * 木马邮件ID
+     */
+    private Long trojanId;
+
+    /**
      * 内容
      */
     private String content;

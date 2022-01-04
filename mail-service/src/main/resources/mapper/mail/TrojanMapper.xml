@@ -8,13 +8,12 @@
         <result column="account_id" property="accountId" />
         <result column="source" property="source" />
         <result column="target" property="target" />
-        <result column="mail_sploit" property="mailSploit" />
-        <result column="mail_sploit_name" property="mailSploitName" />
-        <result column="mail_sploit_email" property="mailSploitEmail" />
+        <result column="mail_counterfeit_flag" property="mailCounterfeitFlag" />
+        <result column="mail_counterfeit_name" property="mailCounterfeitName" />
+        <result column="mail_counterfeit_email" property="mailCounterfeitEmail" />
         <result column="title" property="title" />
         <result column="vpn_id" property="vpnId" />
         <result column="status" property="status" />
-        <result column="trojan_detail_id" property="trojanDetailId" />
         <result column="create_time" property="createTime" />
         <result column="modified" property="modified" />
         <result column="removed" property="removed" />
@@ -24,7 +23,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, account_id, source, target, mail_sploit, mail_sploit_name, mail_sploit_email, title, vpn_id, status, trojan_detail_id, create_time, modified, removed, user_id, creator
+        id, account_id, source, target, mail_counterfeit_flag, mail_counterfeit_name, mail_counterfeit_email, title, vpn_id, status, create_time, modified, removed, user_id, creator
     </sql>
 
 </mapper>
