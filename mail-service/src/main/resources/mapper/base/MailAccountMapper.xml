@@ -3,7 +3,7 @@
 <mapper namespace="com.islet.base_mail_account.mapper.BaseMailAccountMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.islet.base_mail_account.model.BaseMailAccount">
+    <resultMap id="BaseResultMap" type="com.islet.model.base.MailAccount">
         <id column="id" property="id" />
         <result column="account" property="account" />
         <result column="password" property="password" />
