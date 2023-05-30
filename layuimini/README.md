@@ -87,3 +87,6 @@ layuimini后台模板
 开源项目不易，若此项目能得到你的青睐，可以捐赠支持作者持续开发与维护，感谢所有支持开源的朋友。
 
  ![Image text](https://chung-common.oss-cn-beijing.aliyuncs.com/donate_qrcode.png)
+
+
+https://layui.dev/docs/2.8/color/#seven
