@@ -40,4 +40,22 @@ public class PageController {
 
     @GetMapping("user/edit")
     public String userEdit() { return "base/user/edit"; }
+
+    @GetMapping("role")
+    public String role() { return "base/role/list"; }
+
+    @GetMapping("role/add")
+    public String roleAdd() { return "base/role/add"; }
+
+    @GetMapping("role/edit")
+    public String roleEdit() { return "base/role/edit"; }
+
+    @GetMapping("permission")
+    public String permission() { return "base/permission/list"; }
+
+    @GetMapping("permission/add")
+    public String permissionAdd() { return "base/permission/add"; }
+
+    @GetMapping("permission/edit")
+    public String permissionEdit() { return "base/permission/edit"; }
 }
