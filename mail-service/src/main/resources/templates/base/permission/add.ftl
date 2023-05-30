@@ -17,27 +17,34 @@
 <body>
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
-        <label class="layui-form-label required">姓名</label>
+        <label class="layui-form-label required">父级</label>
         <div class="layui-input-block">
-            <input type="text" name="name" lay-verify="required" lay-reqtext="姓名不能为空" placeholder="请输入姓名" value="" class="layui-input">
+            <select name="parentId" lay-filter="aihao">
+                <option value=""></option>
+                <option value="0">写作</option>
+                <option value="1" selected="">阅读</option>
+                <option value="2">游戏</option>
+                <option value="3">音乐</option>
+                <option value="4">旅行</option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">手机</label>
+        <label class="layui-form-label required">权限名称</label>
         <div class="layui-input-block">
-            <input type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机" value="" class="layui-input">
+            <input type="text" name="name" lay-verify="required" lay-reqtext="名称不能为空" placeholder="请输入名称" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">用户名</label>
+        <label class="layui-form-label required">唯一标识</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input">
+            <input type="text" name="key" lay-verify="required" lay-reqtext="唯一标识不能为空" placeholder="请输入唯一标识" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label required">密码</label>
+        <label class="layui-form-label required">路径</label>
         <div class="layui-input-block">
-            <input type="password" name="password" lay-verify="required" lay-reqtext="密码不能为空" placeholder="请输入密码" value="" class="layui-input">
+            <input type="text" name="url" lay-verify="required" lay-reqtext="路径不能为空" placeholder="请输入路径" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -56,37 +63,6 @@
 <script src="../../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
-    /*$(document).ready(function(){
-        $.ajax({
-            url: contextPath + "/role/findAll",
-            type:"get",
-            success:function(data){
-                let resultCode = data.code;
-                if (resultCode == 1000) {
-                    let result = data.data;
-                    for(let i=0; i<result.length; i++){
-                        let resultElement = result[i];
-                        $("#roleList").append("<option value='"+resultElement.id+"'>"+resultElement.name+"</option>");
-                        renderForm();//表单重新渲染，要不然添加完显示不出来新的option
-                        layer.close(i);
-                    }
-                }
-            },
-            error:function(data){
-                console.log(data);
-                layer.msg('操作失败');
-            }
-        });
-    });
-
-    function renderForm(){
-        layui.use('form', function(){
-            let form = layui.form;
-            form.render();
-        });
-    }*/
-
-
     layui.use(['form'], function () {
         let form = layui.form,
             layer = layui.layer,
@@ -106,7 +82,7 @@
                     let resultCode = data.code;
                     let resultMsg = data.msg;
                     if (resultCode == 0) {
-                        location.href = contextPath + "/page/user";
+                        location.href = contextPath + "/page/permission";
                     } else {
                         layer.msg(resultMsg);
                     }
