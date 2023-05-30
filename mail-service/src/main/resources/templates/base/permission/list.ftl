@@ -19,15 +19,15 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户名</label>
+                            <label class="layui-form-label">权限名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">手机号码</label>
+                            <label class="layui-form-label">key</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="phone" autocomplete="off" class="layui-input">
+                                <input type="text" name="key" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -66,7 +66,7 @@
         let authorization = localStorage.getItem("authorization");
         table.render({
             elem: '#currentTableId',
-            url: contextPath + '/user/page',
+            url: contextPath + '/permission/page',
             toolbar: '#toolbarDemo',
             headers : {'Authorization' : authorization},
             parseData: function(res) { //res 即为原始返回的数据
@@ -80,9 +80,11 @@
             },
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'username', width: 150, title: '用户名'},
-                {field: 'name', width: 120, title: '姓名', sort: true},
-                {field: 'phone', width: 150, title: '手机号码'},
+                {field: 'parentName', width: 150, title: '父级权限名称'},
+                {field: 'name', width: 120, title: '权限名称', sort: true},
+                {field: 'key', width: 150, title: '唯一标识'},
+                {field: 'url', width: 200, title: '路径', sort: true},
+                {field: 'creator', width: 200, title: '创建人', sort: true},
                 {field: 'createTime', width: 200, title: '创建时间', sort: true},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
@@ -117,13 +119,13 @@
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {  // 监听添加操作
                 let index = layer.open({
-                    title: '添加用户',
+                    title: '添加权限',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content:  contextPath + '/page/user/add'
+                    content:  contextPath + '/page/permission/add'
 
                 });
                 $(window).on("resize", function () {
@@ -144,7 +146,7 @@
                 }
 
                 let result = JSON.parse('{"ids":['+ids+']}');
-                ajaxPostAsyncData(contextPath + '/user/delete', result, function(d){
+                ajaxPostAsyncData(contextPath + '/permission/delete', result, function(d){
                 });
             }
         });
@@ -158,13 +160,13 @@
             let data = obj.data;
             if (obj.event === 'edit') {
                 let index = layer.open({
-                    title: '编辑用户',
+                    title: '编辑权限',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: contextPath + '/page/user/edit',
+                    content: contextPath + '/page/permission/edit',
                     success: function (layero, index) {
                         let body = layui.layer.getChildFrame('body', index);
                         body.find("input[name='id']").val(data.id);
@@ -184,12 +186,12 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('您确定要删除该用户吗？', function (index) {
+                layer.confirm('您确定要删除该权限吗？', function (index) {
                     obj.del();
                     layer.close(index);
                 });
                 let result = JSON.parse('{"ids":['+data.id+']}');
-                ajaxPostAsyncData(contextPath + '/user/delete', result, function(d){
+                ajaxPostAsyncData(contextPath + '/permission/delete', result, function(d){
 
                 });
             }

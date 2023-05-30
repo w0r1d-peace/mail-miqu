@@ -61,13 +61,13 @@
             },
             {
               "title": "角色管理",
-              "href": "../page/welcome-2.html",
+              "href": "../page/role",
               "icon": "fa fa-tachometer",
               "target": "_self"
             },
             {
               "title": "权限管理",
-              "href": "../page/welcome-3.html",
+              "href": "../page/permission",
               "icon": "fa fa-tachometer",
               "target": "_self"
             }
