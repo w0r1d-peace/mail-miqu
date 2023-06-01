@@ -101,32 +101,22 @@
 <script>
     function addTask() {
         layui.use('layer', function () {
-            let index = layer.open({
-                title: '编辑用户',
+            layer.open({
                 type: 2,
-                shade: 0.2,
-                maxmin:true,
+                area: ['680px', '480px'],
+                content: contextPath + '/page/task/add',
+                title: '新建帐号',
+                fixed: false, // 不固定
+                maxmin: true,
                 shadeClose: true,
-                area: ['100%', '100%'],
-                content: contextPath + '/page/user/edit',
-                success: function (layero, index) {
-                    let body = layui.layer.getChildFrame('body', index);
-                    body.find("input[name='id']").val(data.id);
-                    body.find("input[name='name']").val(data.name);
-                    body.find("input[name='phone']").val(data.phone);
-                    body.find("textarea[name='description']").val(data.description);
-                    form.render();
-                    setTimeout(function () {
-                        layui.layer.tips('点击此处返回列表', '.layui-layer-setwin .layui-layer-close', {
-                            tips: 3
-                        });
-                    }, 500)
+                btn: ['创建', '取消'],
+                btnAlign: 'c',
+                yes: function(index, layero) {
+                    console.log(111);
+                    let email = $('input[name="email"]').val();
+                    console.log(email);
                 }
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-            return false;
+            })
         });
     }
 
