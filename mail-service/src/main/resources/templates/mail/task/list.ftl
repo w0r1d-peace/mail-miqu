@@ -16,6 +16,7 @@
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
+        <form class="layui-form layui-form-pane" action="">
         <div class="layui-row">
             <!-- 管理邮箱列表区域 -->
             <div class="layui-col-md2">
@@ -90,35 +91,66 @@
             </div>
         </div>
 
-        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        </form>
 
     </div>
 </div>
 
 <script src="../common/common.js"></script>
+<script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
 <script>
     function addTask() {
         layui.use('layer', function () {
-            layer.open({
+            let index = layer.open({
+                title: '添加任务',
                 type: 2,
-                area: ['680px', '480px'],
-                content: contextPath + '/page/task/add',
-                title: '新建帐号',
-                fixed: false, // 不固定
-                maxmin: true,
+                shade: 0.2,
+                maxmin:true,
                 shadeClose: true,
-                btn: ['创建', '取消'],
-                btnAlign: 'c',
-                yes: function(index, layero) {
-                    console.log(111);
-                    let email = $('input[name="email"]').val();
-                    console.log(email);
-                }
-            })
+                area: ['680px', '480px'],
+                content:  contextPath + '/page/task/add'
+
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
         });
     }
+
+
+/*
+    layui.use(['form', 'table'], function () {
+        let $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        let authorization = localStorage.getItem("authorization");
+
+        /!**
+         * toolbar监听事件
+         *!/
+        form.on('submit(addTask)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                let index = layer.open({
+                    title: '添加任务',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content:  contextPath + '/page/task/add'
+
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            }
+        });
+    });
+*/
+
+
 
 </script>
 </body>
