@@ -58,4 +58,10 @@ public class PageController {
 
     @GetMapping("permission/edit")
     public String permissionEdit() { return "base/permission/edit"; }
+
+    @GetMapping("task")
+    public String task() { return "mail/task/list"; }
+
+    @GetMapping("task/add")
+    public String taskAdd() { return "mail/task/add"; }
 }

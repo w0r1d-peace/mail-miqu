@@ -33,7 +33,7 @@ public class TaskController extends AbstractController {
      * @param form
      * @return
      */
-    @PostMapping("/save_task")
+    @PostMapping("/save")
     @ResponseBody
     public Result<Long> saveTask(@RequestBody @Valid TaskSaveOrUpdateDTO form) {
         return Result.success(taskService.saveTask(form));
@@ -44,7 +44,7 @@ public class TaskController extends AbstractController {
      * @param form
      * @return
      */
-    @PostMapping("/update_task")
+    @PostMapping("/update")
     @ResponseBody
     public Result<Boolean> updateTask(@RequestBody @Valid TaskSaveOrUpdateDTO form) {
         return Result.success(taskService.updateTask(form));
@@ -53,7 +53,7 @@ public class TaskController extends AbstractController {
     /**
      * 拉取邮件
      */
-    @GetMapping("/pull_email")
+    @GetMapping("/pull/email")
     @ResponseBody
     public void pullEmail(@RequestParam @Valid List<Long> ids) {
         taskService.pullEmail(ids, super.getUserId(), super.getCreateName());
@@ -62,7 +62,7 @@ public class TaskController extends AbstractController {
     /**
      * 批量删除
      */
-    @PostMapping("/delete_task")
+    @PostMapping("/delete")
     @ResponseBody
     public Result<Boolean> deleteTask(@RequestBody @NotNull(message = "请选择删除邮箱") List<Long> ids) {
         return Result.success(taskService.deleteTask(ids, super.getUserId(), super.getCreateName()));

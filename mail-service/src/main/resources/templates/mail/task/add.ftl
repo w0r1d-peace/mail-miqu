@@ -32,7 +32,7 @@
         <label class="layui-form-label">邮箱类型</label>
         <div class="layui-input-block">
             <div class="layui-col-md6">
-                <select>
+                <select name="protocolType" class="layui-input">
                     <option value="">请选择</option>
                     <option value="1">ICMP</option>
                     <option value="2">POP3</option>
@@ -52,7 +52,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">SSL</label>
         <div class="layui-input-block">
-            <input type="checkbox" name="ssl" lay-skin="switch">
+            <input type="checkbox" name="hasSsl" lay-skin="switch" value="true" class="layui-input">
         </div>
     </div>
 
@@ -83,6 +83,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             data = data.field;
+            console.log(data);
             $.ajax({
                 url: contextPath + "/task/save",
                 data: JSON.stringify(data),
