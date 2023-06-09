@@ -70,17 +70,17 @@ public class Task implements Serializable {
     /**
      * 邮箱类型 1-imap 2-pop3 4-exchange
      */
-    private Integer type;
+    private Integer protocolType;
 
     /**
      * 是否监控 0-否 1-是
      */
-    private Boolean monitoring;
+    private Boolean hasMonitoring;
 
     /**
      * 重点关注目标 0-否 1-是
      */
-    private Boolean emphasis;
+    private Boolean hasEmphasis;
 
     /**
      * 描述

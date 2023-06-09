@@ -64,6 +64,20 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">监控对象</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="hasMonitoring" lay-skin="switch" value="true" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">重点关注目标</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="hasEmphasis" lay-skin="switch" value="true" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
         </div>
@@ -83,7 +97,16 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             data = data.field;
-            console.log(data);
+            if (data.hasSsl == undefined) {
+                data.hasSsl = false;
+            }
+            if (data.hasMonitoring == undefined) {
+                data.hasMonitoring = false;
+            }
+            if (data.hasEmphasis == undefined) {
+                data.hasEmphasis = false;
+            }
+
             $.ajax({
                 url: contextPath + "/task/save",
                 data: JSON.stringify(data),

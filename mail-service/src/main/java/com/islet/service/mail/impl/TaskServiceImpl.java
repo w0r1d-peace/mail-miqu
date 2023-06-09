@@ -64,7 +64,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         MailConnCfg mailConnCfg = new MailConnCfg();
         BeanUtils.copyProperties(dto, mailConnCfg);
         mailConnCfg.setSsl(Optional.ofNullable(dto.getHasSsl()).orElse(false));
-        IMailService mailService = getMailService(dto.getType());
+        IMailService mailService = getMailService(dto.getProtocolType());
         getMailConn(mailConnCfg, mailService);
 
         Date now = new Date();
@@ -103,7 +103,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
         MailConnCfg mailConnCfg = new MailConnCfg();
         BeanUtils.copyProperties(dto, mailConnCfg);
         mailConnCfg.setSsl(Optional.ofNullable(dto.getHasSsl()).orElse(false));
-        IMailService mailService = getMailService(dto.getType());
+        IMailService mailService = getMailService(dto.getProtocolType());
         getMailConn(mailConnCfg, mailService);
 
         Task task = getById(dto.getId());
@@ -121,7 +121,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
             taskList.stream().forEach(task -> {
                 MailConnCfg mailConnCfg = new MailConnCfg();
                 BeanUtils.copyProperties(task, mailConnCfg);
-                IMailService mailService = getMailService(task.getType());
+                IMailService mailService = getMailService(task.getProtocolType());
                 MailConn mailConn = getMailConn(mailConnCfg, mailService);
                 try {
                     List<MailItem> mailItems = mailService.listAll(mailConn, "", null);
@@ -154,7 +154,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
     @Override
     public Boolean emphasis(Long id, Long userId, String createName) {
         return super.update(new LambdaUpdateWrapper<Task>()
-                .set(Task::getEmphasis, true)
+                .set(Task::getHasEmphasis, true)
                 .set(Task::getUpdateId, userId)
                 .set(Task::getUpdateName, createName)
                 .set(Task::getUpdateTime, new Date())
@@ -166,7 +166,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
     @Override
     public Boolean monitoring(Long id, Long userId, String createName) {
         return super.update(new LambdaUpdateWrapper<Task>()
-                .set(Task::getMonitoring, true)
+                .set(Task::getHasMonitoring, true)
                 .set(Task::getUpdateId, userId)
                 .set(Task::getUpdateName, createName)
                 .set(Task::getUpdateTime, new Date())
@@ -188,7 +188,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
             taskList.stream().forEach(task -> {
                 MailConnCfg mailConnCfg = new MailConnCfg();
                 BeanUtils.copyProperties(task, mailConnCfg);
-                IMailService mailService = getMailService(task.getType());
+                IMailService mailService = getMailService(task.getProtocolType());
                 MailConn mailConn = getMailConn(mailConnCfg, mailService);
                 try {
                     List<MailItem> mailItems = mailService.listAll(mailConn, "", null);

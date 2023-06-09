@@ -35,10 +35,10 @@ public class TaskSaveOrUpdateDTO extends BaseDTO {
     private String password;
 
     /**
-     * 类型
+     * 协议类型
      */
-    @NotNull(message = "类型不能为空")
-    private Integer type;
+    @NotNull(message = "协议类型不能为空")
+    private Integer protocolType;
 
     /**
      * 收件服务器
@@ -55,17 +55,20 @@ public class TaskSaveOrUpdateDTO extends BaseDTO {
     /**
      * 是否使用SSL
      */
+    @NotNull(message = "ssl不能为空")
     private Boolean hasSsl;
 
     /**
      * 是否监控
      */
-    private Boolean monitoring;
+    @NotNull(message = "监控对象不能为空")
+    private Boolean hasMonitoring;
 
     /**
      * 是否为重点关注目标
      */
-    private Boolean emphasis;
+    @NotNull(message = "重点关注目标不能为空")
+    private Boolean hasEmphasis;
 
     /**
      * 备注
