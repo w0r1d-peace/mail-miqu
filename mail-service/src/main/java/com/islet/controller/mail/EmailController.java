@@ -18,17 +18,4 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Validated
 public class EmailController extends AbstractController {
 
-    private IEmailTransClientService emailTransClientService;
-
-    /**
-     * 获取邮件内容
-     * @param uid
-     */
-    @GetMapping("get_mail_content")
-    @ResponseBody
-    public void getMailContent(Long uid) {
-        emailTransClientService.getMailContent(uid);
-    }
-
-
 }

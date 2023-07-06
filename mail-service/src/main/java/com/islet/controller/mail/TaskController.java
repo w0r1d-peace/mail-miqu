@@ -122,7 +122,7 @@ public class TaskController extends AbstractController {
     @GetMapping("mail/detail")
     @ResponseBody
     public Result<TaskMailDetailVO> mailDetail(@NotNull(message = "ID不能为空") Long id) {
-        return Result.success(emailTransClientService.mailDetail(id));
+        return null;
     }
 
     /**
