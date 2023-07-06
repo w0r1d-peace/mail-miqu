@@ -27,7 +27,11 @@ public class InformationServiceImpl extends ServiceImpl<InformationMapper, Infor
     @Override
     public List<TaskMailListVO> mailList(Long taskId) {
         User user = ThreadUtil.currentUser.get();
-        List<Information> list = super.list(new LambdaQueryWrapper<Information>().eq(Information::getRemoved, false).eq(Information::getTaskId, taskId).eq(Information::getUserId, user.getUserId()));
+        List<Information> list = super.list(
+                new LambdaQueryWrapper<Information>()
+                        .eq(Information::getTaskId, taskId)
+                        .eq(Information::getUserId, user.getId())
+        );
         return CachedBeanCopierUtil.copyList(list, TaskMailListVO.class);
     }
 }

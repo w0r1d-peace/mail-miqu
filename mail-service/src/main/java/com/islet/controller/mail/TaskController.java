@@ -5,9 +5,11 @@ import com.islet.controller.AbstractController;
 import com.islet.domain.dto.mail.ExportDTO;
 import com.islet.domain.dto.mail.TaskSaveOrUpdateDTO;
 import com.islet.domain.vo.mail.TaskListVO;
+import com.islet.domain.vo.mail.TaskMailDetailVO;
 import com.islet.domain.vo.mail.TaskMailListVO;
 import com.islet.service.mail.IInformationService;
 import com.islet.service.mail.ITaskService;
+import com.islet.support.elasticsearch.service.IEmailTransClientService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,9 @@ public class TaskController extends AbstractController {
 
     @Resource
     private IInformationService informationService;
+
+    @Resource
+    private IEmailTransClientService emailTransClientService;
 
     /**
      * 保存
@@ -109,6 +114,15 @@ public class TaskController extends AbstractController {
     @ResponseBody
     public Result<List<TaskMailListVO>> mailList(@NotNull(message = "ID不能为空") Long id) {
         return Result.success(informationService.mailList(id));
+    }
+
+    /**
+     * 获取邮件详情
+     */
+    @GetMapping("mail/detail")
+    @ResponseBody
+    public Result<TaskMailDetailVO> mailDetail(@NotNull(message = "ID不能为空") Long id) {
+        return Result.success(emailTransClientService.mailDetail(id));
     }
 
     /**

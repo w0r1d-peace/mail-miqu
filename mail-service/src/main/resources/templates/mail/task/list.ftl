@@ -5,99 +5,73 @@
     <title>menu</title>
     <link rel="stylesheet" href="../lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../css/public.css" media="all">
-    <style>
-        .layui-btn:not(.layui-btn-lg ):not(.layui-btn-sm):not(.layui-btn-xs) {
-            height: 34px;
-            line-height: 34px;
-            padding: 0 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/mail/task/list.css" media="all">
+    <!-- 其他代码... -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.infinitescroll/3.0.5/jquery.infinitescroll.min.js"></script>
 </head>
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
         <form class="layui-form layui-form-pane" action="">
-        <div class="layui-row">
-            <!-- 管理邮箱列表区域 -->
-            <div class="layui-col-md2">
-                <div class="layui-card">
-                    <div class="layui-card-header">
-                        <span>邮箱账户</span>
-                        <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="float:right; margin-top: 3px;" onclick="addTask()">
-                            <i class="layui-icon layui-icon-add-1"></i>
-                        </button>
-                    </div>
-                    <div class="layui-card-body">
-                        <ul id="emailList">
-                            <!-- 邮箱列表项 -->
-                            <li class="layui-nav-item" style="height: 30px;">
-                                <a href="javascript:;">example1@example.com</a>
-                            </li>
-                            <li class="layui-nav-item" style="height: 30px;">
-                                <a href="javascript:;">example2@example.com</a>
-                            </li>
-                            <!-- 更多邮箱列表项... -->
-                        </ul>
+            <div class="layui-row">
+                <!-- 管理邮箱列表区域 -->
+                <div class="layui-col-md3">
+                    <div class="layui-card">
+                        <div class="layui-card-header">
+                            <span>邮箱账户</span>
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="float:right; margin-top: 3px;" onclick="addTask()">
+                                <i class="layui-icon layui-icon-add-1"></i>
+                            </button>
+                        </div>
+                        <div class="layui-card-body">
+                            <ul id="emailList" class="email-list scroll-pagination">
+                                <!-- 邮箱列表项 -->
+                                <!-- 更多邮箱列表项... -->
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 邮件列表区域 -->
-            <div class="layui-col-md3">
-                <div class="layui-card">
-                    <div class="layui-card-header">邮件列表</div>
-                    <div class="layui-card-body">
-                        <table class="layui-table">
-                            <colgroup>
-                                <col width="300">
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>主题</th>
-                            </tr>
-                            </thead>
-                            <tbody id="mailList">
-                            <!-- 邮件列表项 -->
-                            <tr>
-                                <td>邮件主题1</td>
-                            </tr>
-                            <tr>
-                                <td>邮件主题2</td>
-                            </tr>
-                            <!-- 更多邮件列表项... -->
-                            </tbody>
-                        </table>
+                <!-- 邮件列表区域 -->
+                <div class="layui-col-md4">
+                    <div class="layui-card">
+                        <div class="layui-card-header">邮件列表</div>
+                        <div class="layui-card-body">
+                            <div id="mailList" class="scroll-pagination">
+                                <!-- 邮件列表项 -->
+                                <!-- 更多邮件列表项... -->
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <!-- 邮件内容区域 -->
-            <div class="layui-col-md7">
-                <div class="layui-card">
-                    <div class="layui-card-header">邮件内容</div>
-                    <div class="layui-card-body">
-                        <div class="email-content">
-                            <h3>邮件主题</h3>
-                            <p>发件人：example@example.com</p>
-                            <p>收件时间：2023-05-31 10:00:00</p>
-                            <hr>
-                            <!-- 邮件正文内容 -->
-                            <p>亲爱的用户，</p>
-                            <p>这是一封示例邮件...</p>
-                            <p>此致，</p>
-                            <p>示例团队</p>
+                <!-- 邮件内容区域 -->
+                <div class="layui-col-md5">
+                    <div class="layui-card">
+                        <div class="layui-card-header">邮件内容</div>
+                        <div class="layui-card-body">
+                            <div id="mailContent" class="mail-content">
+                                <h3>邮件主题</h3>
+                                <p>发件人：example@example.com</p>
+                                <p>收件时间：2023-05-31 10:00:00</p>
+                                <hr>
+                                <!-- 邮件正文内容 -->
+                                <p>亲爱的用户，</p>
+                                <p>这是一封示例邮件...</p>
+                                <p>此致，</p>
+                                <p>示例团队</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
         </form>
-
     </div>
 </div>
 
 <script src="../common/common.js"></script>
 <script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-infinitescroll/3.0.5/infinite-scroll.pkgd.js"></script>
 <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
     // 页面加载时请求后台邮箱列表数据
@@ -151,6 +125,12 @@
             id: id
         };
 
+        let page = 1;
+        let isLoading = false;
+
+        if (isLoading) return;
+        isLoading = true;
+
         const queryString = new URLSearchParams(params).toString();
         const url = contextPath + '/task/mail/list?' + queryString;
         // 发送请求获取邮件列表数据
@@ -169,27 +149,72 @@
                 if (data.code === 0) {
                     let mailList = data.data;
 
-                    // 动态渲染邮件列表到HTML页面中
-                    let mailListContainer = document.getElementById('mailList');
-                    mailListContainer.innerHTML = ''; // 清空原有内容
+                    let mailListContainer = $('#mailList');
 
+                    mailListContainer.html("");
                     mailList.forEach(function (mail) {
-                        let tr = document.createElement('tr');
-
-                        let td = document.createElement('td');
-                        td.innerText = mail.title;
-
-                        tr.appendChild(td);
-                        mailListContainer.appendChild(tr);
+                        let mailItem = $('<div class="mail-item"><span>' + mail.title + '</span></div>');
+                        mailListContainer.append(mailItem);
                     });
+
+                    page++;
+                    isLoading = false;
                 } else {
                     layer.msg(data.msg);
                 }
             })
             .catch(function (error) {
                 console.log('请求错误：', error);
+                isLoading = false;
             });
     }
+
+    /**
+     * 查看邮件详情
+     * @param mailId
+     */
+    function viewMail(mailId) {
+        fetch('获取邮件内容的接口URL?mailId=' + mailId, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                var mail = data.mail;
+                document.getElementById('mailSubject').innerHTML = mail.title;
+                document.getElementById('mailSender').innerHTML = '发件人：' + mail.sender;
+                document.getElementById('mailTime').innerHTML = '收件时间：' + mail.time;
+                document.getElementById('mailBody').innerHTML = mail.body;
+            })
+            .catch(function (error) {
+                console.log('请求错误：', error);
+            });
+    }
+
+/*    // 使用Infinite Scroll库来实现无限滚动效果
+    $('#mailList').infinitescroll({
+        navSelector: '#paginationLoader',
+        nextSelector: '.pagination a',
+        itemSelector: '.mail-item',
+        loading: {
+            finishedMsg: '没有更多邮件了',
+            msgText: '加载中...',
+            img: 'https://i.imgur.com/6RMhx.gif',
+            speed: 'slow'
+        },
+        behavior: 'local',
+        maxPage: 5, // 最大加载页数
+        debug: false,
+        errorCallback: function () {
+            console.log('请求错误');
+        },
+        path: function () {
+            return '后台获取邮件列表数据的接口URL?page=' + page;
+        }
+    });*/
 
     // 添加任务
     function addTask() {
@@ -200,7 +225,7 @@
                 shade: 0.2,
                 maxmin:true,
                 shadeClose: true,
-                area: ['680px', '480px'],
+                area: ['680px', '550px'],
                 content:  contextPath + '/page/task/add'
 
             });

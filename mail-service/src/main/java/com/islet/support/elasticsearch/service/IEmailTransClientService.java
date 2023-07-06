@@ -1,6 +1,7 @@
 package com.islet.support.elasticsearch.service;
 
 
+import com.islet.domain.vo.mail.TaskMailDetailVO;
 import com.islet.support.elasticsearch.domain.EmailEs;
 
 /**
@@ -19,4 +20,11 @@ public interface IEmailTransClientService {
     EmailEs saveEmail(EmailEs emailEs);
 
     void getMailContent(Long emailId);
+
+    /**
+     * 获取邮件详情
+     * @param id
+     * @return
+     */
+    TaskMailDetailVO mailDetail(Long id);
 }
