@@ -28,7 +28,7 @@
                         </button>
                     </div>
                     <div class="layui-card-body">
-                        <ul>
+                        <ul id="emailList">
                             <!-- 邮箱列表项 -->
                             <li class="layui-nav-item" style="height: 30px;">
                                 <a href="javascript:;">example1@example.com</a>
@@ -56,7 +56,7 @@
                                 <th>主题</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="mailList">
                             <!-- 邮件列表项 -->
                             <tr>
                                 <td>邮件主题1</td>
@@ -100,6 +100,98 @@
 <script src="../lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
 <script src="../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
+    // 页面加载时请求后台邮箱列表数据
+    window.onload = function () {
+        let authorization = localStorage.getItem("authorization");
+
+        fetch(contextPath + "/task/list", {
+            headers: {
+                'Authorization': authorization
+            }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                // 解析返回的数据，提取邮箱列表
+                if (data.code === 0) {
+                    let emailList = data.data;
+                    // 动态渲染邮箱列表到HTML页面中
+                    let emailListContainer = document.getElementById('emailList');
+                    emailListContainer.innerHTML = ''; // 清空原有内容
+
+                    emailList.forEach(function (email) {
+                        let li = document.createElement('li');
+                        li.className = 'layui-nav-item';
+                        li.style.height = '30px';
+
+                        let a = document.createElement('a');
+                        a.href = 'javascript:;';
+                        a.innerText = email.email;
+                        a.onclick = function () {
+                            loadMailList(email.id);
+                        };
+
+                        li.appendChild(a);
+                        emailListContainer.appendChild(li);
+                    });
+                } else {
+                    layer.msg(data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.log('请求错误：', error);
+            });
+    };
+
+    // 加载邮件列表
+    function loadMailList(id) {
+        let authorization = localStorage.getItem("authorization");
+        const params = {
+            id: id
+        };
+
+        const queryString = new URLSearchParams(params).toString();
+        const url = contextPath + '/task/mail/list?' + queryString;
+        // 发送请求获取邮件列表数据
+        fetch(url, {
+            headers: {
+                'Authorization': authorization
+            },
+            // 可根据需要设置请求参数，如邮箱地址
+            // body: JSON.stringify({ email: email })
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                // 解析返回的数据，提取邮件列表
+                if (data.code === 0) {
+                    let mailList = data.data;
+
+                    // 动态渲染邮件列表到HTML页面中
+                    let mailListContainer = document.getElementById('mailList');
+                    mailListContainer.innerHTML = ''; // 清空原有内容
+
+                    mailList.forEach(function (mail) {
+                        let tr = document.createElement('tr');
+
+                        let td = document.createElement('td');
+                        td.innerText = mail.title;
+
+                        tr.appendChild(td);
+                        mailListContainer.appendChild(tr);
+                    });
+                } else {
+                    layer.msg(data.msg);
+                }
+            })
+            .catch(function (error) {
+                console.log('请求错误：', error);
+            });
+    }
+
+    // 添加任务
     function addTask() {
         layui.use('layer', function () {
             let index = layer.open({
@@ -117,40 +209,6 @@
             });
         });
     }
-
-
-/*
-    layui.use(['form', 'table'], function () {
-        let $ = layui.jquery,
-            form = layui.form,
-            table = layui.table;
-
-        let authorization = localStorage.getItem("authorization");
-
-        /!**
-         * toolbar监听事件
-         *!/
-        form.on('submit(addTask)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                let index = layer.open({
-                    title: '添加任务',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content:  contextPath + '/page/task/add'
-
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            }
-        });
-    });
-*/
-
-
 
 </script>
 </body>

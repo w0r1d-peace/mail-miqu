@@ -177,7 +177,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements IT
 
     @Override
     public List<TaskListVO> list(String email, Long userId) {
-        List<Task> list = super.list(new LambdaQueryWrapper<Task>().eq(Task::getRemoved, false).eq(StringUtils.isNotBlank(email), Task::getEmail, email).eq(Task::getUpdateId, userId));
+        List<Task> list = super.list(new LambdaQueryWrapper<Task>().eq(Task::getRemoved, false).like(StringUtils.isNotBlank(email), Task::getEmail, email));
         return CachedBeanCopierUtil.copyList(list, TaskListVO.class);
     }
 

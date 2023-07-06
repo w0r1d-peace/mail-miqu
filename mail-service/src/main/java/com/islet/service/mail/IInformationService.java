@@ -1,7 +1,10 @@
 package com.islet.service.mail;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.islet.domain.vo.mail.TaskMailListVO;
 import com.islet.model.mail.Information;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,10 @@ import com.islet.model.mail.Information;
  */
 public interface IInformationService extends IService<Information> {
 
+    /**
+     * 邮件列表
+     * @param taskId
+     * @return
+     */
+    List<TaskMailListVO> mailList(Long taskId);
 }

@@ -5,6 +5,7 @@ import com.islet.common.web.ResultCode;
 import com.islet.domain.dto.BaseDTO;
 import com.islet.exception.BusinessException;
 import com.islet.model.base.User;
+import com.islet.util.ThreadUtil;
 import com.islet.util.UserContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +63,8 @@ public class PermissionAspect {
             // 避免在强转的时候报错
             try {
                 user = (User) o;
+                ThreadLocal<User> currentUser = ThreadUtil.currentUser;
+                currentUser.set(user);
             } catch (Exception e) {
                 throw new BusinessException(ResultCode.FAIL);
             }
